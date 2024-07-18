@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
   struct dirent *entry;
   while ((entry = readdir(proc)) != NULL) {
     if (entry->d_type == DT_DIR) {
-      if (is_int(entry->name)) {
+      if (is_int(entry->d_name)) {
         printf("%s - %d - %d\n", entry->d_name, entry->d_type,
                is_int(entry->d_name));
       }
