@@ -14,11 +14,11 @@ typedef struct Process {
 int is_int(const char *str) {
   while (*str) {
     if (!isdigit(*str)) {
-      return 1;
+      return 0;
     }
     str++;
   }
-  return 0;
+  return 1;
 }
 
 int main(int argc, char *argv[]) {
