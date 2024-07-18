@@ -9,6 +9,7 @@
 typedef struct Process {
   int pid;
   struct Process *child;
+  struct Process *sibling;
 } Process;
 
 int is_int(const char *str) {
@@ -37,11 +38,14 @@ int main(int argc, char *argv[]) {
 
   struct dirent *entry;
   while ((entry = readdir(proc)) != NULL) {
-    if (entry->d_type == DT_DIR) {
-      if (is_int(entry->d_name)) {
-        printf("%s - %d - %d\n", entry->d_name, entry->d_type,
-               is_int(entry->d_name));
-      }
+    if (entry->d_type == DT_DIR && is_int(entry->d_name)) {
+
+      Process *proc = malloc(sizeof(Process));
+      proc->pid = atoi(entry->d_name);
+      proc->child = NULL;
+      printf("%s - %d - %d\n", entry->d_name, entry->d_type,
+             is_int(entry->d_name));
+
       // int pid = atoi(entry->d_name);
       // int ppid;
       // char name[256];
