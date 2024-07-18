@@ -1,64 +1,33 @@
-#include <assert.h>
-#include <ctype.h>
-#include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
-#define PROC_DIR "/proc"
+void pstree(int pid, int level) {
+    int i;
+    for (i = 0; i < level; ++i)
+        printf("  "); // 控制縮進
 
-typedef struct Process {
-  int pid;
-  struct Process *child;
-  struct Process *sibling;
-} Process;
+    printf("%d\n", pid); // 印出當前進程的PID
 
-int is_int(const char *str) {
-  while (*str) {
-    if (!isdigit(*str)) {
-      return 0;
+    // 創建子進程
+    if (fork() == 0) {
+        // 子進程
+        // 遞歸調用pstree函數
+        pstree(pid * 2, level + 1);
+    } else {
+        wait(NULL); // 等待子進程結束
     }
-    str++;
-  }
-  return 1;
 }
 
-int main(int argc, char *argv[]) {
-  for (int i = 0; i < argc; i++) {
-    assert(argv[i]);
-    printf("argv[%d] = %s\n", i, argv[i]);
-  }
-  assert(!argv[argc]);
-  printf("%s\n", PROC_DIR);
+int main() {
+    // 獲取當前進程的PID
+    int pid = getpid();
+    printf("Process Tree for PID %d:\n", pid);
 
-  DIR *proc = opendir(PROC_DIR);
-  if (!proc) {
-    perror("opendir");
-    return EXIT_FAILURE;
-  }
+    // 調用pstree函數
+    pstree(pid, 0);
 
-  struct dirent *entry;
-  while ((entry = readdir(proc)) != NULL) {
-    if (entry->d_type == DT_DIR && is_int(entry->d_name)) {
-
-      Process *proc = malloc(sizeof(Process));
-      proc->pid = atoi(entry->d_name);
-      proc->child = NULL;
-      printf("%s - %d - %d\n", entry->d_name, entry->d_type,
-             is_int(entry->d_name));
-
-      // int pid = atoi(entry->d_name);
-      // int ppid;
-      // char name[256];
-      // get_process_info(pid, &ppid, name, sizeof(name));
-      // Process *proc = create_process(pid, ppid, name);
-      // processes[pid] = proc;
-      // if (ppid >= 0 && processes[ppid]) {
-      //   add_child_process(processes[ppid], proc);
-      // } else {
-      //   add_child_process(root, proc);
-      // }
-    }
-  }
-
-  return 0;
+    return 0;
 }
