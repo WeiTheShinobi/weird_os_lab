@@ -12,12 +12,12 @@ typedef struct Process {
   struct Process *child;
 } Process;
 
-int is_int(char *str) {
+int is_int(const char *str) {
   while (*str) {
     if (!isdigit(*str)) {
       return 1;
-      str++;
     }
+    str++;
   }
   return 0;
 }
