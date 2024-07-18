@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
   struct dirent *entry;
   while ((entry = readdir(proc)) != NULL) {
     if (entry->d_type == DT_DIR) {
-      printf("%s - %d\n - %d", entry->d_name, entry->d_type, is_int(entry->d_name));
+      printf("%s - %d - %d\n", entry->d_name, entry->d_type, is_int(entry->d_name));
       // int pid = atoi(entry->d_name);
       // int ppid;
       // char name[256];
