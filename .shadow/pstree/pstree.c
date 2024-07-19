@@ -90,7 +90,7 @@ int main(int argc, char *argv[]) {
       int pid = atoi(entry->d_name);
       size_t ppid = parse_ppid(pid);
       Process *proc = new_process(pid);
-      add_child_proc(proc_arr[ppid], proc);
+      // add_child_proc(proc_arr[ppid], proc);
       proc_arr[pid] = proc;
     }
   }
