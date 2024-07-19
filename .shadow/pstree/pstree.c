@@ -10,6 +10,7 @@
 
 typedef struct Process {
   int pid;
+  int ppid;
   struct Process **child_arr;
   int child_arr_cap;
   int child_arr_len;
@@ -25,9 +26,10 @@ int is_int(const char *str) {
   return 1;
 }
 
-Process *new_process(int pid) {
+Process *new_process(int pid, int ppid) {
   Process *proc = malloc(sizeof(Process));
   proc->pid = pid;
+  proc->ppid = ppid;
   int cap = 8;
   proc->child_arr = (Process **)malloc(sizeof(Process *) * cap);
   for (int i = 0; i < cap; i++) {
@@ -110,7 +112,7 @@ int main(int argc, char *argv[]) {
     if (entry->d_type == DT_DIR && is_int(entry->d_name)) {
       int pid = atoi(entry->d_name);
       size_t ppid = parse_ppid(pid);
-      Process *proc = new_process(pid);
+      Process *proc = new_process(pid, ppid);
       if (ppid != 0) {
         add_child_proc(proc_arr[ppid], proc);
       }
@@ -119,7 +121,11 @@ int main(int argc, char *argv[]) {
   }
 
   closedir(proc_dir);
-  process_printf(proc_arr[1]);
+  for (int i = 1; i < 99999; i++) {
+    if (proc_arr[i] && proc_arr[i]->ppid != 0) {
+      process_printf(proc_arr[i]);
+    }
+  }
   printf("---\n");
   return 0;
 }
