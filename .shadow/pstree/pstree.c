@@ -32,6 +32,7 @@ Process *new_process(int pid) {
   proc->child_arr = (Process **)malloc(sizeof(Process *) * cap);
   for (int i = 0; i < cap; i++) {
     proc->child_arr[i] = NULL;
+    printf("%p\n", proc->child_arr[i]);
   }
   proc->child_arr_cap = 8;
   proc->child_arr_len = 0;
