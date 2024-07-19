@@ -62,16 +62,18 @@ int main(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
 
+  Process *proc_arr[32678] = {NULL};
+
   struct dirent *entry;
   while ((entry = readdir(proc_dir)) != NULL) {
     if (entry->d_type == DT_DIR && is_int(entry->d_name)) {
       int pid = atoi(entry->d_name);
       Process *proc = new_process(pid);
-      process_printf(proc);
     }
   }
 
   closedir(proc_dir);
+  process_printf(proc_arr[1]);
 
   return 0;
 }
