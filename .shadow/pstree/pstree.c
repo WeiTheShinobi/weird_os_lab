@@ -75,14 +75,14 @@ int main(int argc, char *argv[]) {
     printf("argv[%d] = %s\n", i, argv[i]);
   }
   assert(!argv[argc]);
-
+     printf("----\n");
   DIR *proc_dir = opendir(PROC_DIR);
   if (!proc_dir) {
     perror("opendir");
     return EXIT_FAILURE;
   }
 
-      printf("----");
+      printf("----\n");
   Process *proc_arr[32678] = {NULL};
 
   struct dirent *entry;
