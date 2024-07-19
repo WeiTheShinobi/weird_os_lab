@@ -78,7 +78,7 @@ size_t parse_ppid(int pid) {
             break;
         }
     }
-
+    printf("%d\n", ppid);
     fclose(file);
     return ppid;
 }
