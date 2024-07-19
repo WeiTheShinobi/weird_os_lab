@@ -111,6 +111,6 @@ int main(int argc, char *argv[]) {
 
   closedir(proc_dir);
   process_printf(proc_arr[1]);
-  printf("---\n")
+  printf("---\n");
   return 0;
 }
