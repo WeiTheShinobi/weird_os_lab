@@ -35,7 +35,7 @@ Process *new_process(int pid) {
 }
 
 void process_printf(Process* proc) {
-  printf("%d", proc->pid);
+  printf("pid: %d\n", proc->pid);
 }
 
 void add_child_proc(Process *proc, Process *child) {
