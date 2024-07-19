@@ -43,10 +43,10 @@ void process_printf(Process *proc) {
   printf("pid: %d\n", proc->pid);
   Process *next = proc->child_arr[0];
   for (int i = 0; i < proc->child_arr_len; i++) {
-    printf("%p\n", next);
+    printf("%d\n", next->pid);
     next++;
     printf("%zu\n", sizeof(Process));
-    printf("%p\n", next);
+    printf("%d\n", next->pid);
     process_printf(next);
   }
 }
