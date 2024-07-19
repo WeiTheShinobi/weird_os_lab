@@ -69,7 +69,7 @@ size_t parse_ppid(int pid) {
   fgets(buffer, 100, file);
   fclose(file);
 
-  printf("%s\n", buffer);
+  printf("%s end\n", buffer);
   return ppid;
 }
 
