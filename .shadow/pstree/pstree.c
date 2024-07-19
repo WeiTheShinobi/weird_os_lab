@@ -122,7 +122,7 @@ int main(int argc, char *argv[]) {
 
   closedir(proc_dir);
   for (int i = 1; i < 99999; i++) {
-    if (proc_arr[i] && proc_arr[i]->ppid != 0) {
+    if (proc_arr[i] && proc_arr[i]->ppid == 0) {
       process_printf(proc_arr[i]);
     }
   }
