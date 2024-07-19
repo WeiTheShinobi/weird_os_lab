@@ -35,6 +35,9 @@ Process *new_process(int pid) {
 }
 
 void process_printf(Process *proc) {
+  if (!proc) {
+    return;
+  }
   printf("pid: %d\n", proc->pid);
   for (int i = 0; i < proc->child_arr_len; i++) {
     process_printf(proc->child_arr[i]);
@@ -98,7 +101,7 @@ int main(int argc, char *argv[]) {
            printf("----\n");
   closedir(proc_dir);
            printf("----\n");
-  // process_printf(proc_arr[1]);
+  process_printf(proc_arr[1]);
            printf("----\n");
 
   return 0;
