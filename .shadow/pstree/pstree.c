@@ -29,7 +29,7 @@ Process *new_process(int pid) {
   Process *proc = malloc(sizeof(Process));
   proc->pid = pid;
   int cap = 8;
-  proc->child_arr = malloc(sizeof(Process *) * cap);
+  proc->child_arr = malloc(sizeof(Process*) * cap);
   proc->child_arr_cap = 8;
   proc->child_arr_len = 0;
 
@@ -41,7 +41,7 @@ void process_printf(Process *proc) {
     return;
   }
   printf("pid: %d\n", proc->pid);
-  Process *next = proc->child_arr[0];
+  Process *next = proc->child_arr;
   for (int i = 0; i < proc->child_arr_len; i++) {
     printf("%d\n", next->pid);
     next++;
