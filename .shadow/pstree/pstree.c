@@ -69,18 +69,18 @@ size_t parse_ppid(int pid) {
     return -1;
   }
 
-    char buffer[BUFFER_SIZE];
-    int ppid = 0;
+  char buffer[BUFFER_SIZE];
+  int ppid = 0;
 
-    while (fgets(buffer, BUFFER_SIZE, file)) {
-        if (strncmp(buffer, "PPid:", 5) == 0) {
-            sscanf(buffer, "PPid:\t%d", &ppid);
-            break;
-        }
+  while (fgets(buffer, BUFFER_SIZE, file)) {
+    if (strncmp(buffer, "PPid:", 5) == 0) {
+      sscanf(buffer, "PPid:\t%d", &ppid);
+      break;
     }
-    printf("ppid: %d\n", ppid);
-    fclose(file);
-    return ppid;
+  }
+  printf("ppid: %d\n", ppid);
+  fclose(file);
+  return ppid;
 }
 
 int main(int argc, char *argv[]) {
@@ -102,10 +102,12 @@ int main(int argc, char *argv[]) {
   while ((entry = readdir(proc_dir)) != NULL) {
     if (entry->d_type == DT_DIR && is_int(entry->d_name)) {
       int pid = atoi(entry->d_name);
-      printf("%d\n",pid);
+      printf("%d\n", pid);
       size_t ppid = parse_ppid(pid);
       Process *proc = new_process(pid);
-      // add_child_proc(proc_arr[ppid], proc);
+      if (ppid != 0) {
+        add_child_proc(proc_arr[ppid], proc);
+      }
       proc_arr[pid] = proc;
     }
   }
