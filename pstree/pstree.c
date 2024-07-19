@@ -1,25 +1,98 @@
 #include <assert.h>
+#include <ctype.h>
 #include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <dirent.h>
-#include <ctype.h>
+#include <string.h>
 
 #define PROC_DIR "/proc"
+#define BUFFER_SIZE 256
 
 typedef struct Process {
   int pid;
-  struct Process *child;
+  int ppid;
+  struct Process **child_arr;
+  int child_arr_cap;
+  int child_arr_len;
 } Process;
 
-int is_int(char *str) {
+int is_int(const char *str) {
   while (*str) {
     if (!isdigit(*str)) {
-      return 1;
-      str++;
+      return 0;
+    }
+    str++;
+  }
+  return 1;
+}
+
+Process *new_process(int pid, int ppid) {
+  Process *proc = malloc(sizeof(Process));
+  proc->pid = pid;
+  proc->ppid = ppid;
+  int cap = 8;
+  proc->child_arr = (Process **)malloc(sizeof(Process *) * cap);
+  for (int i = 0; i < cap; i++) {
+    proc->child_arr[i] = NULL;
+  }
+  proc->child_arr_cap = 8;
+  proc->child_arr_len = 0;
+
+  return proc;
+}
+
+void process_printf(Process *proc, int level) {
+  if (!proc) {
+    return;
+  }
+  for (int i = 0; i < level; i++) {
+    printf(" ");
+    if (i == level-1) {
+      printf("|- ");
     }
   }
-  return 0;
+  printf("%d\n", proc->pid);
+  for (int i = 0; i < proc->child_arr_len; i++) {
+    process_printf(proc->child_arr[i], level + 1);
+  }
+}
+
+void process_free(Process *proc) {}
+
+void add_child_proc(Process *proc, Process *child) {
+  if (!proc) {
+    return;
+  }
+  if (proc->child_arr_len == proc->child_arr_cap) {
+    proc->child_arr_cap *= 2;
+    proc->child_arr = (Process **)realloc(
+        proc->child_arr, sizeof(Process *) * proc->child_arr_cap);
+  }
+
+  proc->child_arr[proc->child_arr_len] = child;
+  proc->child_arr_len++;
+}
+
+size_t parse_ppid(int pid) {
+  char path[256];
+  snprintf(path, sizeof(path), "/proc/%d/status", pid);
+  FILE *file = fopen(path, "r");
+  if (!file) {
+    perror("fopen error");
+    return -1;
+  }
+
+  char buffer[BUFFER_SIZE];
+  int ppid = 0;
+
+  while (fgets(buffer, BUFFER_SIZE, file)) {
+    if (strncmp(buffer, "PPid:", 5) == 0) {
+      sscanf(buffer, "PPid:\t%d", &ppid);
+      break;
+    }
+  }
+  fclose(file);
+  return ppid;
 }
 
 int main(int argc, char *argv[]) {
@@ -28,31 +101,33 @@ int main(int argc, char *argv[]) {
     printf("argv[%d] = %s\n", i, argv[i]);
   }
   assert(!argv[argc]);
-  printf("%s\n", PROC_DIR);
 
-  DIR *proc = opendir(PROC_DIR);
-  if (!proc) {
+  DIR *proc_dir = opendir(PROC_DIR);
+  if (!proc_dir) {
     perror("opendir");
     return EXIT_FAILURE;
   }
 
+  Process *proc_arr[99999] = {NULL};
+
   struct dirent *entry;
-  while ((entry = readdir(proc)) != NULL) {
-    if (entry->d_type == DT_DIR) {
-      printf("%s - %d\n - %d", entry->d_name, entry->d_type, is_int(entry->d_name));
-      // int pid = atoi(entry->d_name);
-      // int ppid;
-      // char name[256];
-      // get_process_info(pid, &ppid, name, sizeof(name));
-      // Process *proc = create_process(pid, ppid, name);
-      // processes[pid] = proc;
-      // if (ppid >= 0 && processes[ppid]) {
-      //   add_child_process(processes[ppid], proc);
-      // } else {
-      //   add_child_process(root, proc);
-      // }
+  while ((entry = readdir(proc_dir)) != NULL) {
+    if (entry->d_type == DT_DIR && is_int(entry->d_name)) {
+      int pid = atoi(entry->d_name);
+      size_t ppid = parse_ppid(pid);
+      Process *proc = new_process(pid, ppid);
+      if (ppid != 0) {
+        add_child_proc(proc_arr[ppid], proc);
+      }
+      proc_arr[pid] = proc;
     }
   }
 
+  closedir(proc_dir);
+  for (int i = 1; i < 99999; i++) {
+    if (proc_arr[i] && proc_arr[i]->ppid == 0) {
+      process_printf(proc_arr[i], 0);
+    }
+  }
   return 0;
 }
