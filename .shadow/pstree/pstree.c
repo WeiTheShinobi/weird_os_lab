@@ -54,7 +54,6 @@ int main(int argc, char *argv[]) {
     printf("argv[%d] = %s\n", i, argv[i]);
   }
   assert(!argv[argc]);
-  printf("%s\n", PROC_DIR);
 
   DIR *proc_dir = opendir(PROC_DIR);
   if (!proc_dir) {
