@@ -45,6 +45,7 @@ void process_printf(Process *proc) {
   for (int i = 0; i < proc->child_arr_len; i++) {
     printf("%p\n", next);
     next++;
+    printf("%zu\n", sizeof(Process));
     printf("%p\n", next);
     process_printf(next);
   }
