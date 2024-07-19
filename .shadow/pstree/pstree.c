@@ -89,6 +89,7 @@ int main(int argc, char *argv[]) {
     if (entry->d_type == DT_DIR && is_int(entry->d_name)) {
       int pid = atoi(entry->d_name);
       // size_t ppid = parse_ppid(pid);
+      printf("--");
       Process *proc = new_process(pid);
       // add_child_proc(proc_arr[ppid], proc);
       // proc_arr[pid] = proc;
