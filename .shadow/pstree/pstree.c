@@ -62,7 +62,7 @@ size_t parse_ppid(int pid) {
   }
 
   int ppid;
-  fscanf(file, "%*d %*s %*c %d", &ppid); // 读取并跳过不需要的字段
+  fscanf(file, "%*d %*s %*c %d", &ppid);
   fclose(file);
 
   printf("%d", ppid);
