@@ -96,7 +96,7 @@ int main(int argc, char *argv[]) {
   }
 
   closedir(proc_dir);
-  // process_printf(proc_arr[1]);
+  process_printf(proc_arr[1]);
 
   return 0;
 }
