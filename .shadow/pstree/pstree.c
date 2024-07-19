@@ -69,6 +69,7 @@ int main(int argc, char *argv[]) {
     if (entry->d_type == DT_DIR && is_int(entry->d_name)) {
       int pid = atoi(entry->d_name);
       Process *proc = new_process(pid);
+      proc_arr[pid] = proc;
     }
   }
 
