@@ -46,17 +46,19 @@ void process_printf(Process *proc, int level) {
     return;
   }
   for (int i = 0; i < level; i++) {
-    printf(" - ");
+    if (i == 0) {
+      printf("|");
+    } else {
+      printf("- ");
+    }
   }
   printf("%d, %d\n", proc->pid, proc->child_arr_len);
   for (int i = 0; i < proc->child_arr_len; i++) {
-    process_printf(proc->child_arr[i], level+1);
+    process_printf(proc->child_arr[i], level + 1);
   }
 }
 
-void process_free(Process *proc) {
-
-}
+void process_free(Process *proc) {}
 
 void add_child_proc(Process *proc, Process *child) {
   if (!proc) {
