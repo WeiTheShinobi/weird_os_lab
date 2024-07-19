@@ -29,7 +29,7 @@ Process *new_process(int pid) {
   Process *proc = malloc(sizeof(Process));
   proc->pid = pid;
   int cap = 8;
-  proc->child_arr = malloc(sizeof(Process*) * cap);
+  proc->child_arr = (Process**)malloc(sizeof(Process*) * cap);
   proc->child_arr_cap = 8;
   proc->child_arr_len = 0;
 
