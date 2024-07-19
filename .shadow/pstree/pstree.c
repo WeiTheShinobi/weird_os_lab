@@ -3,8 +3,10 @@
 #include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define PROC_DIR "/proc"
+#define BUFFER_SIZE 256
 
 typedef struct Process {
   int pid;
@@ -45,6 +47,9 @@ void process_printf(Process *proc) {
 }
 
 void add_child_proc(Process *proc, Process *child) {
+  if (!proc) {
+    return;
+  }
   if (proc->child_arr_len == proc->child_arr_cap) {
     proc->child_arr_cap *= 2;
     proc->child_arr = (Process **)realloc(
@@ -64,13 +69,18 @@ size_t parse_ppid(int pid) {
     return -1;
   }
 
-  int ppid;
-  char buffer[1000];
-  fgets(buffer, 1000, file);
-  fclose(file);
+    char buffer[BUFFER_SIZE];
+    size_t ppid = 0;
 
-  printf("%s end\n", buffer);
-  return ppid;
+    while (fgets(buffer, BUFFER_SIZE, file)) {
+        if (strncmp(buffer, "PPid:", 5) == 0) {
+            sscanf(buffer, "PPid:\t%zu", &ppid);
+            break;
+        }
+    }
+
+    fclose(file);
+    return ppid;
 }
 
 int main(int argc, char *argv[]) {
