@@ -109,6 +109,7 @@ int main(int argc, char *argv[]) {
       proc_arr[pid] = proc;
     }
   }
+      printf("----\n");
 
   closedir(proc_dir);
   process_printf(proc_arr[1]);
