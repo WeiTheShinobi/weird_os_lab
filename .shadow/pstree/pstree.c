@@ -65,10 +65,11 @@ size_t parse_ppid(int pid) {
   }
 
   int ppid;
-  fscanf(file, "%*d %*s %*c %d", &ppid);
+  char buffer[100];
+  fgets(buffer, 2, file);
   fclose(file);
 
-  printf("%d\n", ppid);
+  printf("%s\n", buffer);
   return ppid;
 }
 
