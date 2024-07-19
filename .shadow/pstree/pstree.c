@@ -46,7 +46,7 @@ void process_printf(Process *proc, int level) {
     return;
   }
   for (int i = 0; i < level; i++) {
-    printf("-");
+    printf(" - ");
   }
   printf("%d, %d\n", proc->pid, proc->child_arr_len);
   for (int i = 0; i < proc->child_arr_len; i++) {
@@ -128,6 +128,5 @@ int main(int argc, char *argv[]) {
       process_printf(proc_arr[i], 0);
     }
   }
-  printf("---\n");
   return 0;
 }
