@@ -84,10 +84,10 @@ int main(int argc, char *argv[]) {
 
   Process *proc_arr[32678] = {NULL};
 
+      printf("----");
   struct dirent *entry;
   while ((entry = readdir(proc_dir)) != NULL) {
     if (entry->d_type == DT_DIR && is_int(entry->d_name)) {
-      printf("----");
       int pid = atoi(entry->d_name);
       // size_t ppid = parse_ppid(pid);
       Process *proc = new_process(pid);
