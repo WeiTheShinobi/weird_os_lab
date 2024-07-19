@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
     printf("argv[%d] = %s\n", i, argv[i]);
   }
   assert(!argv[argc]);
-     printf("----\n");
+
   DIR *proc_dir = opendir(PROC_DIR);
   if (!proc_dir) {
     perror("opendir");
@@ -84,7 +84,7 @@ int main(int argc, char *argv[]) {
 
       printf("----\n");
   Process *proc_arr[32678] = {NULL};
-
+     printf("----\n");
   struct dirent *entry;
   while ((entry = readdir(proc_dir)) != NULL) {
     if (entry->d_type == DT_DIR && is_int(entry->d_name)) {
