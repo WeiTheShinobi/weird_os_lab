@@ -29,9 +29,9 @@ Process *new_process(int pid) {
   Process *proc = malloc(sizeof(Process));
   proc->pid = pid;
   int cap = 8;
-  proc->child_arr = (Process**)malloc(sizeof(Process*) * cap);
-  for (int i = 0; i < proc->child_arr_cap; i++) {
-        proc->child_arr[i] = NULL;
+  proc->child_arr = (Process **)malloc(sizeof(Process *) * cap);
+  for (int i = 0; i < cap; i++) {
+    proc->child_arr[i] = NULL;
   }
   proc->child_arr_cap = 8;
   proc->child_arr_len = 0;
