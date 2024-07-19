@@ -34,7 +34,7 @@ Process *new_process(int pid) {
   return proc;
 }
 
-void process_print(const Process* proc) {
+void process_printf(Process* proc) {
   printf("%d", proc->pid);
 }
 
@@ -66,9 +66,9 @@ int main(int argc, char *argv[]) {
   while ((entry = readdir(proc_dir)) != NULL) {
     if (entry->d_type == DT_DIR && is_int(entry->d_name)) {
       int pid = atoi(entry->d_name);
-
+      printf("%d", pid);
       Process *proc = new_process(pid);
-      process_print(proc);
+      process_printf(proc);
     }
   }
 
