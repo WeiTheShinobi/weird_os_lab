@@ -91,7 +91,7 @@ int main(int argc, char *argv[]) {
       // size_t ppid = parse_ppid(pid);
       Process *proc = new_process(pid);
       // add_child_proc(proc_arr[ppid], proc);
-      proc_arr[pid] = proc;
+      // proc_arr[pid] = proc;
     }
   }
 
