@@ -97,7 +97,9 @@ int main(int argc, char *argv[]) {
 
            printf("----\n");
   closedir(proc_dir);
+           printf("----\n");
   process_printf(proc_arr[1]);
+           printf("----\n");
 
   return 0;
 }
