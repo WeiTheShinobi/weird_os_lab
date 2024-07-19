@@ -1,33 +1,78 @@
+#include <assert.h>
+#include <ctype.h>
+#include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h>
 
-void pstree(int pid, int level) {
-    int i;
-    for (i = 0; i < level; ++i)
-        printf("  "); // 控制縮進
+#define PROC_DIR "/proc"
 
-    printf("%d\n", pid); // 印出當前進程的PID
+typedef struct Process {
+  int pid;
+  struct Process **child_arr;
+  int child_arr_cap;
+  int child_arr_len;
+} Process;
 
-    // 創建子進程
-    if (fork() == 0) {
-        // 子進程
-        // 遞歸調用pstree函數
-        pstree(pid * 2, level + 1);
-    } else {
-        wait(NULL); // 等待子進程結束
+int is_int(const char *str) {
+  while (*str) {
+    if (!isdigit(*str)) {
+      return 0;
     }
+    str++;
+  }
+  return 1;
 }
 
-int main() {
-    // 獲取當前進程的PID
-    int pid = getpid();
-    printf("Process Tree for PID %d:\n", pid);
+Process *new_process(int pid) {
+  Process *proc = malloc(sizeof(Process));
+  proc->pid = pid;
+  int cap = 8;
+  proc->child_arr = malloc(sizeof(Process*)*cap);
+  proc->child_arr_cap = 8;
+  proc->child_arr_len = 0;
 
-    // 調用pstree函數
-    pstree(pid, 0);
+  return proc;
+}
 
-    return 0;
+void process_print(const Process* proc) {
+  printf("%d", proc->pid);
+}
+
+void add_child_proc(Process *proc, Process *child) {
+  if (proc->child_arr_len == proc->child_arr_cap) {
+    proc->child_arr_cap *= 2;
+    proc->child_arr = (Process**)realloc(proc->child_arr, sizeof(Process*) * proc->child_arr_cap);
+  }
+
+  proc->child_arr_len++;
+  proc->child_arr[proc->child_arr_len] = child;
+}
+
+int main(int argc, char *argv[]) {
+  for (int i = 0; i < argc; i++) {
+    assert(argv[i]);
+    printf("argv[%d] = %s\n", i, argv[i]);
+  }
+  assert(!argv[argc]);
+  printf("%s\n", PROC_DIR);
+
+  DIR *proc_dir = opendir(PROC_DIR);
+  if (!proc_dir) {
+    perror("opendir");
+    return EXIT_FAILURE;
+  }
+
+  struct dirent *entry;
+  while ((entry = readdir(proc_dir)) != NULL) {
+    if (entry->d_type == DT_DIR && is_int(entry->d_name)) {
+      int pid = atoi(entry->d_name);
+
+      Process *proc = new_process(pid);
+      printf(proc);
+    }
+  }
+
+  closedir(proc_dir);
+
+  return 0;
 }
