@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
   while ((entry = readdir(proc_dir)) != NULL) {
     if (entry->d_type == DT_DIR && is_int(entry->d_name)) {
       int pid = atoi(entry->d_name);
-      printf("%d", pid);
+      printf("%d %s\n", pid, entry->d_name);
       Process *proc = new_process(pid);
       process_printf(proc);
     }
