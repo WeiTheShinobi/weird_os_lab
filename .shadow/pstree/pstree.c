@@ -41,13 +41,16 @@ Process *new_process(int pid, int ppid) {
   return proc;
 }
 
-void process_printf(Process *proc) {
+void process_printf(Process *proc, int level) {
   if (!proc) {
     return;
   }
+  for (int i = 0; i < level; i++) {
+    printf("-");
+  }
   printf("%d, %d\n", proc->pid, proc->child_arr_len);
   for (int i = 0; i < proc->child_arr_len; i++) {
-    process_printf(proc->child_arr[i]);
+    process_printf(proc->child_arr[i], level+1);
   }
 }
 
@@ -122,7 +125,7 @@ int main(int argc, char *argv[]) {
   closedir(proc_dir);
   for (int i = 1; i < 99999; i++) {
     if (proc_arr[i] && proc_arr[i]->ppid == 0) {
-      process_printf(proc_arr[i]);
+      process_printf(proc_arr[i], 0);
     }
   }
   printf("---\n");
