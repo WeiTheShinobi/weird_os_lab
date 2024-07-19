@@ -96,7 +96,7 @@ int main(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
 
-  Process *proc_arr[32678] = {NULL};
+  Process *proc_arr[99999] = {NULL};
 
   struct dirent *entry;
   while ((entry = readdir(proc_dir)) != NULL) {
@@ -109,7 +109,6 @@ int main(int argc, char *argv[]) {
       proc_arr[pid] = proc;
     }
   }
-      printf("----\n");
 
   closedir(proc_dir);
   process_printf(proc_arr[1]);
