@@ -43,6 +43,7 @@ void process_printf(Process *proc) {
   if (!proc) {
     return;
   }
+  printf("%d\n", proc->pid);
   for (int i = 0; i < proc->child_arr_len; i++) {
     process_printf(proc->child_arr[i]);
   }
