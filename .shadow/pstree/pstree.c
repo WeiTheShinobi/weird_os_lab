@@ -41,8 +41,10 @@ void process_printf(Process *proc) {
     return;
   }
   printf("pid: %d\n", proc->pid);
+  Process *next = proc->child_arr[0];
   for (int i = 0; i < proc->child_arr_len; i++) {
-    process_printf(proc->child_arr[i]);
+    process_printf(next);
+    next++;
   }
 }
 
