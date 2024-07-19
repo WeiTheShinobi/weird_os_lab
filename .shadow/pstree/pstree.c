@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
       int pid = atoi(entry->d_name);
 
       Process *proc = new_process(pid);
-      printf(proc);
+      process_print(proc);
     }
   }
 
