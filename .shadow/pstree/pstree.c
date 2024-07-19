@@ -70,11 +70,11 @@ size_t parse_ppid(int pid) {
   }
 
     char buffer[BUFFER_SIZE];
-    size_t ppid = 0;
+    int ppid = 0;
 
     while (fgets(buffer, BUFFER_SIZE, file)) {
         if (strncmp(buffer, "PPid:", 5) == 0) {
-            sscanf(buffer, "PPid:\t%zu", &ppid);
+            sscanf(buffer, "PPid:\t%d", &ppid);
             break;
         }
     }
