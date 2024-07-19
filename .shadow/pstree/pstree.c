@@ -47,9 +47,9 @@ void process_printf(Process *proc, int level) {
   }
   for (int i = 0; i < level; i++) {
     if (i == 0) {
-      printf("|");
+      printf(" |");
     } else {
-      printf("- ");
+      printf("-");
     }
   }
   printf("%d, %d\n", proc->pid, proc->child_arr_len);
