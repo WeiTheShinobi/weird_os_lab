@@ -35,7 +35,7 @@ Process *new_process(int pid, int ppid) {
   for (int i = 0; i < cap; i++) {
     proc->child_arr[i] = NULL;
   }
-  proc->child_arr_cap = 8;
+  proc->child_arr_cap = 2;
   proc->child_arr_len = 0;
 
   return proc;
