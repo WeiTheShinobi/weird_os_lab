@@ -47,7 +47,7 @@ void process_printf(Process *proc, int level) {
   }
   for (int i = 0; i < level; i++) {
     printf(" ");
-    if (i == level-1) {
+    if (i == level - 1) {
       printf("|- ");
     }
   }
@@ -56,8 +56,6 @@ void process_printf(Process *proc, int level) {
     process_printf(proc->child_arr[i], level + 1);
   }
 }
-
-void process_free(Process *proc) {}
 
 void add_child_proc(Process *proc, Process *child) {
   if (!proc) {
@@ -129,5 +127,12 @@ int main(int argc, char *argv[]) {
       process_printf(proc_arr[i], 0);
     }
   }
+  for (int i = 1; i < 99999; i++) {
+    if (proc_arr[i] != NULL) {
+      free(proc_arr[i]);
+      proc_arr[i] = NULL;
+    }
+  }
+
   return 0;
 }
