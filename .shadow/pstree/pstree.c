@@ -130,6 +130,7 @@ int main(int argc, char *argv[]) {
   for (int i = 1; i < 99999; i++) {
     if (proc_arr[i] != NULL) {
       free(proc_arr[i]);
+      process_printf(proc_arr[i], 0);
     }
   }
 
