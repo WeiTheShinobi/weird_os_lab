@@ -35,7 +35,7 @@ Process *new_process(int pid, int ppid) {
   for (int i = 0; i < cap; i++) {
     proc->child_arr[i] = NULL;
   }
-  proc->child_arr_cap = 2;
+  proc->child_arr_cap = 8;
   proc->child_arr_len = 0;
 
   return proc;
@@ -56,8 +56,6 @@ void process_printf(Process *proc, int level) {
     process_printf(proc->child_arr[i], level + 1);
   }
 }
-
-void process_free(Process *proc) {}
 
 void add_child_proc(Process *proc, Process *child) {
   if (!proc) {
@@ -109,7 +107,7 @@ int main(int argc, char *argv[]) {
   }
 
   Process *proc_arr[99999] = {NULL};
-
+  free(proc_arr);
   struct dirent *entry;
   while ((entry = readdir(proc_dir)) != NULL) {
     if (entry->d_type == DT_DIR && is_int(entry->d_name)) {
@@ -129,5 +127,7 @@ int main(int argc, char *argv[]) {
       process_printf(proc_arr[i], 0);
     }
   }
+
+
   return 0;
 }
