@@ -128,7 +128,7 @@ int main(int argc, char *argv[]) {
     }
   }
   for (int i = 1; i < 99999; i++) {
-    if (proc_arr[i]) {
+    if (proc_arr[i] != NULL) {
       free(proc_arr[i]);
     }
   }
