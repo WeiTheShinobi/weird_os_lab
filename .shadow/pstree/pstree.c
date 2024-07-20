@@ -47,7 +47,7 @@ void process_printf(Process *proc, int level) {
   }
   for (int i = 0; i < level; i++) {
     printf(" ");
-    if (i == level-1) {
+    if (i == level - 1) {
       printf("|- ");
     }
   }
@@ -107,7 +107,7 @@ int main(int argc, char *argv[]) {
   }
 
   Process *proc_arr[99999] = {NULL};
-  free(proc_arr);
+
   struct dirent *entry;
   while ((entry = readdir(proc_dir)) != NULL) {
     if (entry->d_type == DT_DIR && is_int(entry->d_name)) {
@@ -127,7 +127,11 @@ int main(int argc, char *argv[]) {
       process_printf(proc_arr[i], 0);
     }
   }
-
+  for (int i = 1; i < 99999; i++) {
+    if (proc_arr[i]) {
+      free(proc_arr[i]);
+    }
+  }
 
   return 0;
 }
