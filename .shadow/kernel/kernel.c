@@ -63,6 +63,7 @@ int main(const char *args) {
   splash();
 
   puts("Press any key to see its key code...\n");
+  print_key();
 
   return 0;
 }
