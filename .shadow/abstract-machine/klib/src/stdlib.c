@@ -27,20 +27,31 @@ int atoi(const char *nptr) {
   return x;
 }
 
-void itoa(int n, void* ss) {
-  char *s = ss;
-  int i, j, sign;
-  if ((sign = n) < 0) // 記錄符號
-    n = -n;           // 使n成為正數
-  i = 0;
-  do {
-    s[i++] = n % 10 +'0'; // 取下一個數字
-  } while ((n /= 10) > 0); // 刪除該數字
-  if (sign < 0)
-    s[i++] ='-';
-  s[i] ='\0';
-  for (j = i; j >= 0; j--) // 生成的數字是逆序的，所以要逆序輸出
-    printf("%c", s[j]);
+void itoa(int32_t num, void* ss) {
+    char *s = (char*) ss;
+    int i = 0;
+    int is_negative = 0;
+
+    if (num < 0) {
+        is_negative = 1;
+        num = -num;
+    }
+
+    do {
+        s[i++] = (num % 10) + '0';
+        num /= 10;
+    } while (num > 0);
+
+    if (is_negative) {
+        s[i++] = '-';
+    }
+
+    s[i] = '\0';
+    for (int j = 0; j < i / 2; j++) {
+        char temp = s[j];
+        s[j] = s[i - j - 1];
+        s[i - j - 1] = temp;
+    }
 }
 
 void *malloc(size_t size) {
