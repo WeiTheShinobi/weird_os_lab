@@ -52,6 +52,34 @@ void splash() {
   }
 }
 
+void int_to_string(int32_t num, char* str) {
+    int i = 0;
+    int is_negative = 0;
+
+    if (num < 0) {
+        is_negative = 1;
+        num = -num;
+    }
+
+    // 处理数字
+    do {
+        str[i++] = (num % 10) + '0';
+        num /= 10;
+    } while (num > 0);
+
+    if (is_negative) {
+        str[i++] = '-';
+    }
+
+    str[i] = '\0';
+
+    for (int j = 0; j < i / 2; j++) {
+        char temp = str[j];
+        str[j] = str[i - j - 1];
+        str[i - j - 1] = temp;
+    }
+}
+
 // Operating system is a C program!
 int main(const char *args) {
   ioe_init();
@@ -59,6 +87,12 @@ int main(const char *args) {
   puts("mainargs = \"");
   puts(args);  // make run mainargs=xxx
   puts("\"\n");
+
+  int32_t a = io_read(AM_GPU_CONFIG).width;
+  char b[20];
+
+  int_to_string(a, b);
+  puts(b);
 
   splash();
 
