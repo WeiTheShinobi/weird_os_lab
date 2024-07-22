@@ -60,11 +60,17 @@ int main(const char *args) {
   puts(args);  // make run mainargs=xxx
   puts("\"\n");
 
+  int32_t a = io_read(AM_GPU_CONFIG).width;
+  char b[20];
+
+  itoa(a, b);
+  puts(b);
+  puts("\"\n");
+
   splash();
 
   puts("Press any key to see its key code...\n");
-  while (1) {
-    print_key();
-  }
+  print_key();
+
   return 0;
 }
