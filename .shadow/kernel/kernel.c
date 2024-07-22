@@ -54,9 +54,9 @@ void splash() {
 
 // Operating system is a C program!
 int main(const char *args) {
-  puts("mainargs = \"");
   ioe_init();
 
+  puts("mainargs = \"");
   puts(args);  // make run mainargs=xxx
   puts("\"\n");
 
