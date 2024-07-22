@@ -19,7 +19,7 @@ ifeq ($(findstring $(MAKECMDGOALS),clean|clean-all|html),)
 ### Print build info message
 $(info # Building $(NAME)-$(MAKECMDGOALS) [$(ARCH)])
 
-AM_HOME=~/lab/abstract-machine
+AM_HOME=/root/lab/abstract-machine
 ### Check: environment variable `$AM_HOME` looks sane
 ifeq ($(wildcard $(AM_HOME)/am/include/am.h),)
   $(error $$AM_HOME must be an AbstractMachine repo)
