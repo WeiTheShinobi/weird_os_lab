@@ -179,6 +179,7 @@ struct co {
 struct co *co_start(const char *name, void (*func)(void *), void *arg) {
   context *cx = (context *)calloc(1, sizeof(context));
   context_save(cx);
+  printf("%s", context_to_string(cx));
 
   return NULL;
 }
