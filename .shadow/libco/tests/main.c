@@ -118,7 +118,7 @@ static void test_2() {
 }
 
 typedef struct {
-  ucontext_t context;
+
 } jmp_buf;
 int main() {
     int n = 0;
