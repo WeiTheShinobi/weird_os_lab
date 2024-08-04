@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#
+
 typedef struct context {
   uint64_t rax;
   uint64_t rbx;
@@ -109,32 +109,32 @@ char *context_to_string(context *cx) {
   assert(buffer != NULL);
 
   snprintf(buffer, buffer_size,
-           "rax: 0x%016zu\n"
-           "rbx: 0x%016zu\n"
-           "rcx: 0x%016zu\n"
-           "rdx: 0x%016zu\n"
-           "rsi: 0x%016zu\n"
-           "rdi: 0x%016zu\n"
-           "rbp: 0x%016zu\n"
-           "rsp: 0x%016zu\n"
-           "r8:  0x%016zu\n"
-           "r9:  0x%016zu\n"
-           "r10: 0x%016zu\n"
-           "r11: 0x%016zu\n"
-           "r12: 0x%016zu\n"
-           "r13: 0x%016zu\n"
-           "r14: 0x%016zu\n"
-           "r15: 0x%016zu\n"
-           "rip: 0x%016zu\n"
-           "eflags: 0x%016zu\n"
-           "cs: 0x%016zu\n"
-           "ss: 0x%016zu\n"
-           "ds: 0x%016zu\n"
-           "es: 0x%016zu\n"
-           "fs: 0x%016zu\n"
-           "gs: 0x%016zu\n"
-           "fs_base: 0x%016zu\n"
-           "gs_base: 0x%016zu\n",
+           "rax: 0x%016lu\n"
+           "rbx: 0x%016lu\n"
+           "rcx: 0x%016lu\n"
+           "rdx: 0x%016lu\n"
+           "rsi: 0x%016lu\n"
+           "rdi: 0x%016lu\n"
+           "rbp: 0x%016lu\n"
+           "rsp: 0x%016lu\n"
+           "r8:  0x%016lu\n"
+           "r9:  0x%016lu\n"
+           "r10: 0x%016lu\n"
+           "r11: 0x%016lu\n"
+           "r12: 0x%016lu\n"
+           "r13: 0x%016lu\n"
+           "r14: 0x%016lu\n"
+           "r15: 0x%016lu\n"
+           "rip: 0x%016lu\n"
+           "eflags: 0x%016lu\n"
+           "cs: 0x%016lu\n"
+           "ss: 0x%016lu\n"
+           "ds: 0x%016lu\n"
+           "es: 0x%016lu\n"
+           "fs: 0x%016lu\n"
+           "gs: 0x%016lu\n"
+           "fs_base: 0x%016lu\n"
+           "gs_base: 0x%016lu\n",
            cx->rax, cx->rbx, cx->rcx, cx->rdx, cx->rsi, cx->rdi, cx->rbp,
            cx->rsp, cx->r8, cx->r9, cx->r10, cx->r11, cx->r12, cx->r13, cx->r14,
            cx->r15, cx->rip, cx->eflags, cx->cs, cx->ss, cx->ds, cx->es, cx->fs,
