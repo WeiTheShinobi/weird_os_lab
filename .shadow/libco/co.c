@@ -142,7 +142,7 @@ char *context_to_string(context *cx) {
            "epb: 0x%016zu\n"
            "esi: 0x%016zu\n"
            "edi: 0x%016zu\n"
-           "eip: 0x%016zu\n"
+           "eip: 0x%016zu\n",
                cx->eax, cx->ecx, cx->edx, cx->ebx,
                  cx->epb, cx->esi, cx->edi, cx->eip);
 
