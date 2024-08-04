@@ -14,32 +14,32 @@ enum co_status {
 };
 
 typedef struct context {
-  uint64_t rax;
-  uint64_t rbx;
-  uint64_t rcx;
-  uint64_t rdx;
-  uint64_t rsi;
-  uint64_t rdi;
-  uint64_t rbp;
-  uint64_t rsp;
-  uint64_t r8;
-  uint64_t r9;
-  uint64_t r10;
-  uint64_t r11;
-  uint64_t r12;
-  uint64_t r13;
-  uint64_t r14;
-  uint64_t r15;
-  uint64_t rip;
-  uint64_t eflags;
-  uint64_t cs;
-  uint64_t ss;
-  uint64_t ds;
-  uint64_t es;
-  uint64_t fs;
-  uint64_t gs;
-  uint64_t fs_base;
-  uint64_t gs_base;
+  size_t rax;
+  size_t rbx;
+  size_t rcx;
+  size_t rdx;
+  size_t rsi;
+  size_t rdi;
+  size_t rbp;
+  size_t rsp;
+  size_t r8;
+  size_t r9;
+  size_t r10;
+  size_t r11;
+  size_t r12;
+  size_t r13;
+  size_t r14;
+  size_t r15;
+  size_t rip;
+  size_t eflags;
+  size_t cs;
+  size_t ss;
+  size_t ds;
+  size_t es;
+  size_t fs;
+  size_t gs;
+  size_t fs_base;
+  size_t gs_base;
 } context;
 
 void context_save(context *cx) {
@@ -71,32 +71,32 @@ char *context_to_string(context *co) {
   assert(buffer != NULL);
 
   snprintf(buffer, buffer_size,
-           "rax: 0x%016llu\n"
-           "rbx: 0x%016llu\n"
-           "rcx: 0x%016llu\n"
-           "rdx: 0x%016llu\n"
-           "rsi: 0x%016llu\n"
-           "rdi: 0x%016llu\n"
-           "rbp: 0x%016llu\n"
-           "rsp: 0x%016llu\n"
-           "r8:  0x%016llu\n"
-           "r9:  0x%016llu\n"
-           "r10: 0x%016llu\n"
-           "r11: 0x%016llu\n"
-           "r12: 0x%016llu\n"
-           "r13: 0x%016llu\n"
-           "r14: 0x%016llu\n"
-           "r15: 0x%016llu\n"
-           "rip: 0x%016llu\n"
-           "eflags: 0x%016llu\n"
-           "cs: 0x%016llu\n"
-           "ss: 0x%016llu\n"
-           "ds: 0x%016llu\n"
-           "es: 0x%016llu\n"
-           "fs: 0x%016llu\n"
-           "gs: 0x%016llu\n"
-           "fs_base: 0x%016llu\n"
-           "gs_base: 0x%016llu\n",
+           "rax: 0x%016zu\n"
+           "rbx: 0x%016zu\n"
+           "rcx: 0x%016zu\n"
+           "rdx: 0x%016zu\n"
+           "rsi: 0x%016zu\n"
+           "rdi: 0x%016zu\n"
+           "rbp: 0x%016zu\n"
+           "rsp: 0x%016zu\n"
+           "r8:  0x%016zu\n"
+           "r9:  0x%016zu\n"
+           "r10: 0x%016zu\n"
+           "r11: 0x%016zu\n"
+           "r12: 0x%016zu\n"
+           "r13: 0x%016zu\n"
+           "r14: 0x%016zu\n"
+           "r15: 0x%016zu\n"
+           "rip: 0x%016zu\n"
+           "eflags: 0x%016zu\n"
+           "cs: 0x%016zu\n"
+           "ss: 0x%016zu\n"
+           "ds: 0x%016zu\n"
+           "es: 0x%016zu\n"
+           "fs: 0x%016zu\n"
+           "gs: 0x%016zu\n"
+           "fs_base: 0x%016zu\n"
+           "gs_base: 0x%016zu\n",
            co->rax, co->rbx, co->rcx, co->rdx, co->rsi, co->rdi, co->rbp,
            co->rsp, co->r8, co->r9, co->r10, co->r11, co->r12, co->r13, co->r14,
            co->r15, co->rip, co->eflags, co->cs, co->ss, co->ds, co->es, co->fs,
