@@ -124,7 +124,7 @@ void context_save(context *cx) {
                "mov %%ebp, %4\n\t"
                "mov %%esi, %5\n\t"
                "mov %%edi, %6\n\t"
-               "mov %%eip, %7\n\t"
+               "1: lea 1b, %7\n\t"
                : "=m"(cx->eax), "=m"(cx->ecx), "=m"(cx->edx), "=m"(cx->ebx),
                  "=m"(cx->ebp), "=m"(cx->esi), "=m"(cx->edi), "=m"(cx->eip));
 }
