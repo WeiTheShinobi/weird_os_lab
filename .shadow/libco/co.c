@@ -3,35 +3,35 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <ucontext.h>
 #include <string.h>
+#include <ucontext.h>
+#include <setjmp.h>
 
 typedef struct {
-    ucontext_t context;
+  ucontext_t context;
 } context;
 
 context *new_context() {
-    context *ctx = malloc(sizeof(context));
-    if (!ctx) {
-        perror("malloc");
-        exit(EXIT_FAILURE);
-    }
-    return ctx;
-}
-// 保存当前上下文
-void save_context(context *ctx) {
-    if (getcontext(&ctx->context) == -1) {
-        perror("getcontext");
-        exit(EXIT_FAILURE);
-    }
+  context *ctx = malloc(sizeof(context));
+  if (!ctx) {
+    perror("malloc");
+    exit(EXIT_FAILURE);
+  }
+  return ctx;
 }
 
-// 恢复保存的上下文
+void save_context(context *ctx) {
+  if (getcontext(&ctx->context) == -1) {
+    perror("getcontext");
+    exit(EXIT_FAILURE);
+  }
+}
+
 void restore_context(context *ctx) {
-    if (setcontext(&ctx->context) == -1) {
-        perror("setcontext");
-        exit(EXIT_FAILURE);
-    }
+  if (setcontext(&ctx->context) == -1) {
+    perror("setcontext");
+    exit(EXIT_FAILURE);
+  }
 }
 
 #define STACK_SIZE 100
@@ -50,16 +50,16 @@ struct co {
 
   enum co_status status;     // 协程的状态
   struct co *waiter;         // 是否有其他协程在等待当前协程
-  struct context *context;    // 寄存器现场
+  struct context *context;   // 寄存器现场
   uint8_t stack[STACK_SIZE]; // 协程的堆栈
 };
 
 struct co *co_start(const char *name, void (*func)(void *), void *arg) {
-  context *cx = new_context();
-  save_context(cx);
-    printf("before\n");
-    restore_context(cx);
-    printf("after\n");
+  struct co *new_co = malloc(sizeof(struct co));
+  assert(new_co);
+    new_co->name = strdup(name);
+    new_co->func = func;
+    new_co->arg = arg;
   return NULL;
 }
 
