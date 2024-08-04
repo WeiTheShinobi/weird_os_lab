@@ -22,15 +22,6 @@ typedef struct context {
   size_t r14;
   size_t r15;
   size_t rip;
-  size_t eflags;
-  size_t cs;
-  size_t ss;
-  size_t ds;
-  size_t es;
-  size_t fs;
-  size_t gs;
-  size_t fs_base;
-  size_t gs_base;
 } context;
 
 context *new_context() {
@@ -53,15 +44,6 @@ context *new_context() {
   cx->r14 = 0;
   cx->r15 = 0;
   cx->rip = 0;
-  cx->eflags = 0;
-  cx->cs = 0;
-  cx->ss = 0;
-  cx->ds = 0;
-  cx->es = 0;
-  cx->fs = 0;
-  cx->gs = 0;
-  cx->fs_base = 0;
-  cx->gs_base = 0;
   return cx;
 }
 
