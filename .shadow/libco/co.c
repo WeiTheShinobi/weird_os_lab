@@ -4,42 +4,35 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define X86_64_REGS                                                            \
-  size_t rax;                                                                  \
-  size_t rbx;                                                                  \
-  size_t rcx;                                                                  \
-  size_t rdx;                                                                  \
-  size_t rsi;                                                                  \
-  size_t rdi;                                                                  \
-  size_t rbp;                                                                  \
-  size_t rsp;                                                                  \
-  size_t r8;                                                                   \
-  size_t r9;                                                                   \
-  size_t r10;                                                                  \
-  size_t r11;                                                                  \
-  size_t r12;                                                                  \
-  size_t r13;                                                                  \
-  size_t r14;                                                                  \
-  size_t r15;                                                                  \
-  size_t rip;                                                                  \
-  size_t eflags;                                                               \
-  size_t cs;                                                                   \
-  size_t ss;                                                                   \
-  size_t ds;                                                                   \
-  size_t es;                                                                   \
-  size_t fs;                                                                   \
-  size_t gs;                                                                   \
-  size_t fs_base;                                                              \
-  size_t gs_base;
-
+#if defined(__x86_64__) || defined(_M_X64)
 typedef struct context {
-#if defined(__x86_64__) || defined(_M_X64)
-  X86_64_REGS
-#elif defined(__i386) || defined(_M_IX86)
-#endif
+  size_t rax;
+  size_t rbx;
+  size_t rcx;
+  size_t rdx;
+  size_t rsi;
+  size_t rdi;
+  size_t rbp;
+  size_t rsp;
+  size_t r8;
+  size_t r9;
+  size_t r10;
+  size_t r11;
+  size_t r12;
+  size_t r13;
+  size_t r14;
+  size_t r15;
+  size_t rip;
+  size_t eflags;
+  size_t cs;
+  size_t ss;
+  size_t ds;
+  size_t es;
+  size_t fs;
+  size_t gs;
+  size_t fs_base;
+  size_t gs_base;
 } context;
-
-#if defined(__x86_64__) || defined(_M_X64)
 
 void context_save(context *cx) {
   asm volatile("mov %%rax, %0\n\t"
@@ -61,14 +54,14 @@ void context_save(context *cx) {
                "1: lea 1b(%%rip), %16\n\t"
                "pushfq\n\t"
                "pop %17\n\t"
-               "mov %%cs, %18\n\t"
-               "mov %%ss, %19\n\t"
-               "mov %%ds, %20\n\t"
-               "mov %%es, %21\n\t"
-               "mov %%fs, %22\n\t"
-               "mov %%gs, %23\n\t"
-               "mov %%fs:0, %24\n\t"
-               "mov %%gs:0, %25\n\t"
+                 "mov %%cs, %18\n\t"
+                 "mov %%ss, %19\n\t"
+                 "mov %%ds, %20\n\t"
+                 "mov %%es, %21\n\t"
+                 "mov %%fs, %22\n\t"
+                 "mov %%gs, %23\n\t"
+                 "mov %%fs:0, %24\n\t"
+                 "mov %%gs:0, %25\n\t"
                : "=r"(cx->rax), "=m"(cx->rbx), "=m"(cx->rcx), "=m"(cx->rdx),
                  "=m"(cx->rsi), "=m"(cx->rdi), "=m"(cx->rbp), "=m"(cx->rsp),
                  "=m"(cx->r8), "=m"(cx->r9), "=m"(cx->r10), "=m"(cx->r11),
@@ -146,7 +139,7 @@ void context_save(context *cx) {
                "mov %%esi, %5\n\t"
                "mov %%edi, %6\n\t"
                "pushf\n\t"
-               "pop %7\n\t"
+               "pop, %7\n\t"
                : "=m"(cx->eax), "=m"(cx->ecx), "=m"(cx->edx), "=m"(cx->ebx),
                  "=m"(cx->ebp), "=m"(cx->esi), "=m"(cx->edi), "=a"(cx->eip),
                  "=r"(cx->eip));
@@ -166,14 +159,15 @@ char *context_to_string(context *cx) {
            "esi: 0x%016zu\n"
            "edi: 0x%016zu\n"
            "eip: 0x%016zu\n",
-           cx->eax, cx->ecx, cx->edx, cx->ebx, cx->ebp, cx->esi, cx->edi,
-           cx->eip);
+               cx->eax, cx->ecx, cx->edx, cx->ebx,
+                 cx->ebp, cx->esi, cx->edi, cx->eip);
 
   return buffer;
 }
 #else
 printf("Unknown platform.\n");
 #endif
+
 
 // -----------------------------------
 
@@ -185,6 +179,7 @@ enum co_status {
   CO_WAITING, // 在 co_wait 上等待
   CO_DEAD,    // 已经结束，但还未释放资源
 };
+
 
 struct co {
   char *name;
