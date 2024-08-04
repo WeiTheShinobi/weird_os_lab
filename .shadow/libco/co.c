@@ -57,8 +57,9 @@ struct co {
 struct co *co_start(const char *name, void (*func)(void *), void *arg) {
   context *cx = new_context();
   save_context(cx);
-    printf("abc\n");
+    printf("before\n");
     restore_context(cx);
+    printf("after\n");
   return NULL;
 }
 
