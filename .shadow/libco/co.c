@@ -121,12 +121,12 @@ void context_save(context *cx) {
                "mov %%ecx, %1\n\t"
                "mov %%edx, %2\n\t"
                "mov %%ebx, %3\n\t"
-               "mov %%epb, %4\n\t"
+               "mov %%ebp, %4\n\t"
                "mov %%esi, %5\n\t"
                "mov %%edi, %6\n\t"
                "mov %%eip, %7\n\t"
                : "=r"(cx->eax), "=m"(cx->ecx), "=m"(cx->edx), "=m"(cx->ebx),
-                 "=m"(cx->epb), "=m"(cx->esi), "=m"(cx->edi), "=m"(cx->eip),
+                 "=m"(cx->ebp), "=m"(cx->esi), "=m"(cx->edi), "=m"(cx->eip),
 }
 
 char *context_to_string(context *cx) {
@@ -139,12 +139,12 @@ char *context_to_string(context *cx) {
            "ecx: 0x%016zu\n"
            "edx: 0x%016zu\n"
            "ebx: 0x%016zu\n"
-           "epb: 0x%016zu\n"
+           "ebp: 0x%016zu\n"
            "esi: 0x%016zu\n"
            "edi: 0x%016zu\n"
            "eip: 0x%016zu\n",
                cx->eax, cx->ecx, cx->edx, cx->ebx,
-                 cx->epb, cx->esi, cx->edi, cx->eip);
+                 cx->ebp, cx->esi, cx->edi, cx->eip);
 
   return buffer;
 }
