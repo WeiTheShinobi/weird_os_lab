@@ -139,7 +139,7 @@ void context_save(context *cx) {
                "mov %%esi, %5\n\t"
                "mov %%edi, %6\n\t"
                "pushf\n\t"
-               "pop, %7\n\t"
+               "pop %7\n\t"
                : "=m"(cx->eax), "=m"(cx->ecx), "=m"(cx->edx), "=m"(cx->ebx),
                  "=m"(cx->ebp), "=m"(cx->esi), "=m"(cx->edi), "=a"(cx->eip),
                  "=r"(cx->eip));
