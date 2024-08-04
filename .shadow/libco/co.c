@@ -107,7 +107,7 @@ char *context_to_string(context *cx) {
   size_t buffer_size = 1024;
   char *buffer = (char *)calloc(buffer_size, sizeof(char));
   assert(buffer != NULL);
-  printf("%zu\n", cx->eflags);
+  printf("%zu\n", cx->rax);
   snprintf(buffer, buffer_size,
            "rax: 0x%016zu\n"
            "rbx: 0x%016zu\n"
