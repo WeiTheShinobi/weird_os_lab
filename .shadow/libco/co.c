@@ -50,7 +50,7 @@ struct co {
 
   enum co_status status;     // 协程的状态
   struct co *waiter;         // 是否有其他协程在等待当前协程
-  struct context context;    // 寄存器现场
+  struct context *context;    // 寄存器现场
   uint8_t stack[STACK_SIZE]; // 协程的堆栈
 };
 
