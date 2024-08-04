@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#
 typedef struct context {
   size_t rax;
   size_t rbx;
@@ -34,7 +33,7 @@ typedef struct context {
   size_t gs_base;
 } context;
 
-context* new_context() {
+context *new_context() {
   context *cx = (context *)calloc(1, sizeof(context));
   assert(cx != NULL);
   cx->rax = 0;
@@ -67,7 +66,8 @@ context* new_context() {
 }
 
 void context_save(context *cx) {
-  asm volatile("mov %%rax, %0\n\t"
+  asm volatile("cli"
+    "mov %%rax, %0\n\t"
                "mov %%rbx, %1\n\t"
                "mov %%rcx, %2\n\t"
                "mov %%rdx, %3\n\t"
