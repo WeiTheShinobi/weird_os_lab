@@ -152,7 +152,7 @@ typedef struct user_regs_struct {
   size_t gs;
   size_t fs_base;
   size_t gs_base;
-} context;
+} user_regs_struct;
 void print_registers(struct user_regs_struct *regs) {
     printf("RAX: 0x%zu\n", regs->rax);
     printf("RBX: 0x%zu\n", regs->rbx);
