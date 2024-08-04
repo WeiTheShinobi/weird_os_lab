@@ -1,4 +1,5 @@
 #include "co.h"
+#include "assert.h"
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -69,32 +70,32 @@ char *context_to_string(context *co) {
   assert(buffer != NULL);
 
   snprintf(buffer, buffer_size,
-           "rax: 0x%016llx\n"
-           "rbx: 0x%016llx\n"
-           "rcx: 0x%016llx\n"
-           "rdx: 0x%016llx\n"
-           "rsi: 0x%016llx\n"
-           "rdi: 0x%016llx\n"
-           "rbp: 0x%016llx\n"
-           "rsp: 0x%016llx\n"
-           "r8:  0x%016llx\n"
-           "r9:  0x%016llx\n"
-           "r10: 0x%016llx\n"
-           "r11: 0x%016llx\n"
-           "r12: 0x%016llx\n"
-           "r13: 0x%016llx\n"
-           "r14: 0x%016llx\n"
-           "r15: 0x%016llx\n"
-           "rip: 0x%016llx\n"
-           "eflags: 0x%016llx\n"
-           "cs: 0x%016llx\n"
-           "ss: 0x%016llx\n"
-           "ds: 0x%016llx\n"
-           "es: 0x%016llx\n"
-           "fs: 0x%016llx\n"
-           "gs: 0x%016llx\n"
-           "fs_base: 0x%016llx\n"
-           "gs_base: 0x%016llx\n",
+           "rax: 0x%016lu\n"
+           "rbx: 0x%016lu\n"
+           "rcx: 0x%016lu\n"
+           "rdx: 0x%016lu\n"
+           "rsi: 0x%016lu\n"
+           "rdi: 0x%016lu\n"
+           "rbp: 0x%016lu\n"
+           "rsp: 0x%016lu\n"
+           "r8:  0x%016lu\n"
+           "r9:  0x%016lu\n"
+           "r10: 0x%016lu\n"
+           "r11: 0x%016lu\n"
+           "r12: 0x%016lu\n"
+           "r13: 0x%016lu\n"
+           "r14: 0x%016lu\n"
+           "r15: 0x%016lu\n"
+           "rip: 0x%016lu\n"
+           "eflags: 0x%016lu\n"
+           "cs: 0x%016lu\n"
+           "ss: 0x%016lu\n"
+           "ds: 0x%016lu\n"
+           "es: 0x%016lu\n"
+           "fs: 0x%016lu\n"
+           "gs: 0x%016lu\n"
+           "fs_base: 0x%016lu\n"
+           "gs_base: 0x%016lu\n",
            co->rax, co->rbx, co->rcx, co->rdx, co->rsi, co->rdi, co->rbp,
            co->rsp, co->r8, co->r9, co->r10, co->r11, co->r12, co->r13, co->r14,
            co->r15, co->rip, co->eflags, co->cs, co->ss, co->ds, co->es, co->fs,
