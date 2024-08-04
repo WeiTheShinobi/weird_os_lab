@@ -66,85 +66,45 @@ context *new_context() {
 }
 
 void context_save(context *cx) {
-    asm volatile(
-        "mov %%rax, %0\n\t"
-        "mov %%rbx, %1\n\t"
-        "mov %%rcx, %2\n\t"
-        "mov %%rdx, %3\n\t"
-        "mov %%rsi, %4\n\t"
-        "mov %%rdi, %5\n\t"
-        "mov %%rbp, %6\n\t"
-        "mov %%rsp, %7\n\t"
-        "mov %%r8, %8\n\t"
-        "mov %%r9, %9\n\t"
-        "mov %%r10, %10\n\t"
-        "mov %%r11, %11\n\t"
-        "mov %%r12, %12\n\t"
-        "mov %%r13, %13\n\t"
-        "mov %%r14, %14\n\t"
-        "mov %%r15, %15\n\t"
-        "mov %%rip, %16\n\t"
-        "pushfq\n\t"
-        "pop %17\n\t"
-        "mov %%cs, %18\n\t"
-        "mov %%ss, %19\n\t"
-        "mov %%ds, %20\n\t"
-        "mov %%es, %21\n\t"
-        "mov %%fs, %22\n\t"
-        "mov %%gs, %23\n\t"
-        "mov %%fs:0, %24\n\t"
-        "mov %%gs:0, %25\n\t"
-        : "=m"(cx->rax), "=m"(cx->rbx), "=m"(cx->rcx), "=m"(cx->rdx),
-          "=m"(cx->rsi), "=m"(cx->rdi), "=m"(cx->rbp), "=m"(cx->rsp),
-          "=m"(cx->r8), "=m"(cx->r9), "=m"(cx->r10), "=m"(cx->r11),
-          "=m"(cx->r12), "=m"(cx->r13), "=m"(cx->r14), "=m"(cx->r15),
-          "=m"(cx->rip), "=m"(cx->eflags), "=m"(cx->cs), "=m"(cx->ss),
-          "=m"(cx->ds), "=m"(cx->es), "=m"(cx->fs), "=m"(cx->gs),
-          "=m"(cx->fs_base), "=m"(cx->gs_base)
-    );
+  asm volatile(
+               "mov %%rax, %0\n\t"
+               "mov %%rbx, %1\n\t"
+               "mov %%rcx, %2\n\t"
+               "mov %%rdx, %3\n\t"
+               "mov %%rsi, %4\n\t"
+               "mov %%rdi, %5\n\t"
+               "mov %%rbp, %6\n\t"
+               "mov %%rsp, %7\n\t"
+               "mov %%r8, %8\n\t"
+               "mov %%r9, %9\n\t"
+               "mov %%r10, %10\n\t"
+               "mov %%r11, %11\n\t"
+               "mov %%r12, %12\n\t"
+               "mov %%r13, %13\n\t"
+               "mov %%r14, %14\n\t"
+               "mov %%r15, %15\n\t"
+               "1: lea 1b(%%rip), %16\n\t"
+               "pushfq\n\t"
+               "pop %17\n\t"
+               "mov %%cs, %18\n\t"
+               "mov %%ss, %19\n\t"
+               "mov %%ds, %20\n\t"
+               "mov %%es, %21\n\t"
+               "mov %%fs, %22\n\t"
+               "mov %%gs, %23\n\t"
+               "mov %%fs:0, %24\n\t"
+               "mov %%gs:0, %25\n\t"
+               : "=m"(cx->rax), "=m"(cx->rbx), "=m"(cx->rcx), "=m"(cx->rdx),
+                 "=m"(cx->rsi), "=m"(cx->rdi), "=m"(cx->rbp), "=m"(cx->rsp),
+                 "=m"(cx->r8), "=m"(cx->r9), "=m"(cx->r10), "=m"(cx->r11),
+                 "=m"(cx->r12), "=m"(cx->r13), "=m"(cx->r14), "=m"(cx->r15),
+                 "=a"(cx->rip), "=m"(cx->eflags), "=m"(cx->cs), "=m"(cx->ss),
+                 "=m"(cx->ds), "=m"(cx->es), "=m"(cx->fs), "=m"(cx->gs),
+                 "=r"(cx->fs_base), "=r"(cx->gs_base));
 }
 
-void context_restore(const context *cx) {
-    asm volatile(
-        "mov %0, %%rax\n\t"
-        "mov %1, %%rbx\n\t"
-        "mov %2, %%rcx\n\t"
-        "mov %3, %%rdx\n\t"
-        "mov %4, %%rsi\n\t"
-        "mov %5, %%rdi\n\t"
-        "mov %6, %%rbp\n\t"
-        "mov %7, %%rsp\n\t"
-        "mov %8, %%r8\n\t"
-        "mov %9, %%r9\n\t"
-        "mov %10, %%r10\n\t"
-        "mov %11, %%r11\n\t"
-        "mov %12, %%r12\n\t"
-        "mov %13, %%r13\n\t"
-        "mov %14, %%r14\n\t"
-        "mov %15, %%r15\n\t"
-        "mov %16, %%rip\n\t"
-        "push %17\n\t"
-        "popfq\n\t"
-        "mov %18, %%cs\n\t"
-        "mov %19, %%ss\n\t"
-        "mov %20, %%ds\n\t"
-        "mov %21, %%es\n\t"
-        "mov %22, %%fs\n\t"
-        "mov %23, %%gs\n\t"
-        "mov %24, %%fs:0\n\t"
-        "mov %25, %%gs:0\n\t"
-        :
-        : "m"(cx->rax), "m"(cx->rbx), "m"(cx->rcx), "m"(cx->rdx),
-          "m"(cx->rsi), "m"(cx->rdi), "m"(cx->rbp), "m"(cx->rsp),
-          "m"(cx->r8), "m"(cx->r9), "m"(cx->r10), "m"(cx->r11),
-          "m"(cx->r12), "m"(cx->r13), "m"(cx->r14), "m"(cx->r15),
-          "m"(cx->rip), "m"(cx->eflags), "m"(cx->cs), "m"(cx->ss),
-          "m"(cx->ds), "m"(cx->es), "m"(cx->fs), "m"(cx->gs),
-          "m"(cx->fs_base), "m"(cx->gs_base)
-    );
-}
 char *context_to_string(context *cx) {
-  size_t buffer_size = 3000;
+  size_t buffer_size = 5000;
   char *buffer = (char *)calloc(buffer_size, sizeof(char));
   assert(buffer != NULL);
   snprintf(buffer, buffer_size,
