@@ -117,6 +117,9 @@ static void test_2() {
     q_free(queue);
 }
 
+typedef struct {
+  ucontext_t context;
+} jmp_buf;
 int main() {
     int n = 0;
     jmp_buf buf;
