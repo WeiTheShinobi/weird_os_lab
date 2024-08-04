@@ -126,7 +126,7 @@ void context_save(context *cx) {
                "mov %%edi, %6\n\t"
                "mov %%eip, %7\n\t"
                : "=r"(cx->eax), "=m"(cx->ecx), "=m"(cx->edx), "=m"(cx->ebx),
-                 "=m"(cx->ebp), "=m"(cx->esi), "=m"(cx->edi), "=m"(cx->eip),
+                 "=m"(cx->ebp), "=m"(cx->esi), "=m"(cx->edi), "=m"(cx->eip));
 }
 
 char *context_to_string(context *cx) {
