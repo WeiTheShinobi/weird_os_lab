@@ -136,7 +136,7 @@ int main() {
     // printf("\n\n");
 
 
-    pid_t pid = get_pid();
+    pid_t pid = getpid();
 
     // Attach to the process
     if (ptrace(PTRACE_ATTACH, pid, NULL, NULL) == -1) {
