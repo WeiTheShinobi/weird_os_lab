@@ -4,38 +4,42 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define X86_64_REGS
-size_t rax;
-size_t rbx;
-size_t rcx;
-size_t rdx;
-size_t rsi;
-size_t rdi;
-size_t rbp;
-size_t rsp;
-size_t r8;
-size_t r9;
-size_t r10;
-size_t r11;
-size_t r12;
-size_t r13;
-size_t r14;
-size_t r15;
-size_t rip;
-size_t eflags;
-size_t cs;
-size_t ss;
-size_t ds;
-size_t es;
-size_t fs;
-size_t gs;
-size_t fs_base;
-size_t gs_base;
+#define X86_64_REGS                                                            \
+  size_t rax;                                                                  \
+  size_t rbx;                                                                  \
+  size_t rcx;                                                                  \
+  size_t rdx;                                                                  \
+  size_t rsi;                                                                  \
+  size_t rdi;                                                                  \
+  size_t rbp;                                                                  \
+  size_t rsp;                                                                  \
+  size_t r8;                                                                   \
+  size_t r9;                                                                   \
+  size_t r10;                                                                  \
+  size_t r11;                                                                  \
+  size_t r12;                                                                  \
+  size_t r13;                                                                  \
+  size_t r14;                                                                  \
+  size_t r15;                                                                  \
+  size_t rip;                                                                  \
+  size_t eflags;                                                               \
+  size_t cs;                                                                   \
+  size_t ss;                                                                   \
+  size_t ds;                                                                   \
+  size_t es;                                                                   \
+  size_t fs;                                                                   \
+  size_t gs;                                                                   \
+  size_t fs_base;                                                              \
+  size_t gs_base;
+
+typedef struct context {
+#if defined(__x86_64__) || defined(_M_X64)
+  X86_64_REGS
+#elif defined(__i386) || defined(_M_IX86)
+#endif
+} context;
 
 #if defined(__x86_64__) || defined(_M_X64)
-typedef struct context {
-  X86_64_REGS
-} context;
 
 void context_save(context *cx) {
   asm volatile("mov %%rax, %0\n\t"

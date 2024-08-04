@@ -117,16 +117,52 @@ static void test_2() {
     q_free(queue);
 }
 
+#include <stdio.h>
+#include <sys/ptrace.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <sys/user.h>  // For user_regs_struct
+#include <unistd.h>
+#include <errno.h>
 int main() {
-    setbuf(stdout, NULL);
+    // setbuf(stdout, NULL);
 
-    printf("Test #1. Expect: (X|Y){0, 1, 2, ..., 199}\n");
-    test_1();
+    // printf("Test #1. Expect: (X|Y){0, 1, 2, ..., 199}\n");
+    // test_1();
 
-    printf("\n\nTest #2. Expect: (libco-){200, 201, 202, ..., 399}\n");
-    test_2();
+    // printf("\n\nTest #2. Expect: (libco-){200, 201, 202, ..., 399}\n");
+    // test_2();
 
-    printf("\n\n");
+    // printf("\n\n");
 
+
+    pid_t pid = get_pid();
+
+    // Attach to the process
+    if (ptrace(PTRACE_ATTACH, pid, NULL, NULL) == -1) {
+        perror("ptrace");
+        return 1;
+    }
+
+    // Wait for the process to stop
+    waitpid(pid, NULL, 0);
+
+    // Get the registers
+    struct user_regs_struct regs;
+    if (ptrace(PTRACE_GETREGS, pid, NULL, &regs) == -1) {
+        perror("ptrace");
+        return 1;
+    }
+
+    // Print the registers
+    print_registers(&regs);
+
+    // Detach from the process
+    if (ptrace(PTRACE_DETACH, pid, NULL, NULL) == -1) {
+        perror("ptrace");
+        return 1;
+    }
+
+    return 0;
     return 0;
 }
