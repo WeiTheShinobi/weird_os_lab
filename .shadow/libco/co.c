@@ -67,7 +67,7 @@ context *new_context() {
 
 void context_save(context *cx) {
   asm volatile("cli\n\t"
-    "mov %%rax, %0\n\t"
+               "mov %%rax, %0\n\t"
                "mov %%rbx, %1\n\t"
                "mov %%rcx, %2\n\t"
                "mov %%rdx, %3\n\t"
@@ -108,7 +108,6 @@ char *context_to_string(context *cx) {
   size_t buffer_size = 3000;
   char *buffer = (char *)calloc(buffer_size, sizeof(char));
   assert(buffer != NULL);
-    printf("aaaaaa --%s", buffer);
   snprintf(buffer, buffer_size,
            "rax: 0x%016zu\n"
            "rbx: 0x%016zu\n"
@@ -140,7 +139,7 @@ char *context_to_string(context *cx) {
            cx->rsp, cx->r8, cx->r9, cx->r10, cx->r11, cx->r12, cx->r13, cx->r14,
            cx->r15, cx->rip, cx->eflags, cx->cs, cx->ss, cx->ds, cx->es, cx->fs,
            cx->gs, cx->fs_base, cx->gs_base);
-    printf("%s", buffer);
+  printf("%s", buffer);
   return buffer;
 }
 
@@ -166,6 +165,7 @@ struct co {
 
 struct co *co_start(const char *name, void (*func)(void *), void *arg) {
   context *cx = new_context();
+  printf("create co");
   context_save(cx);
   printf("%s", context_to_string(cx));
 
