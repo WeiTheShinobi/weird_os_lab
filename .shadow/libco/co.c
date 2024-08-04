@@ -71,7 +71,7 @@ char *context_to_string(context *co) {
   assert(buffer != NULL);
 
   snprintf(buffer, buffer_size,
-           "rax: 0x%016u\n"
+           "rax: 0x%016zu\n"
            "rbx: 0x%016zu\n"
            "rcx: 0x%016zu\n"
            "rdx: 0x%016zu\n"
