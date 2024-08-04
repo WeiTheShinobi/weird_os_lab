@@ -3,104 +3,35 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <ucontext.h>
+#include <string.h>
 
-typedef struct context {
-  size_t rax;
-  size_t rbx;
-  size_t rcx;
-  size_t rdx;
-  size_t rsi;
-  size_t rdi;
-  size_t rbp;
-  size_t rsp;
-  size_t r8;
-  size_t r9;
-  size_t r10;
-  size_t r11;
-  size_t r12;
-  size_t r13;
-  size_t r14;
-  size_t r15;
-  size_t rip;
+typedef struct {
+    ucontext_t context;
 } context;
 
 context *new_context() {
-  context *cx = (context *)malloc(sizeof(context));
-  assert(cx != NULL);
-  cx->rax = 0;
-  cx->rbx = 0;
-  cx->rcx = 0;
-  cx->rdx = 0;
-  cx->rsi = 0;
-  cx->rdi = 0;
-  cx->rbp = 0;
-  cx->rsp = 0;
-  cx->r8 = 0;
-  cx->r9 = 0;
-  cx->r10 = 0;
-  cx->r11 = 0;
-  cx->r12 = 0;
-  cx->r13 = 0;
-  cx->r14 = 0;
-  cx->r15 = 0;
-  cx->rip = 0;
-  return cx;
+    context *ctx = malloc(sizeof(context));
+    if (!ctx) {
+        perror("malloc");
+        exit(EXIT_FAILURE);
+    }
+    return ctx;
+}
+// 保存当前上下文
+void save_context(context *ctx) {
+    if (getcontext(&ctx->context) == -1) {
+        perror("getcontext");
+        exit(EXIT_FAILURE);
+    }
 }
 
-void context_save(context *cx) {
-  asm volatile(
-               "mov %%rax, %0\n\t"
-               "mov %%rbx, %1\n\t"
-               "mov %%rcx, %2\n\t"
-               "mov %%rdx, %3\n\t"
-               "mov %%rsi, %4\n\t"
-               "mov %%rdi, %5\n\t"
-               "mov %%rbp, %6\n\t"
-               "mov %%rsp, %7\n\t"
-               "mov %%r8, %8\n\t"
-               "mov %%r9, %9\n\t"
-               "mov %%r10, %10\n\t"
-               "mov %%r11, %11\n\t"
-               "mov %%r12, %12\n\t"
-               "mov %%r13, %13\n\t"
-               "mov %%r14, %14\n\t"
-               "mov %%r15, %15\n\t"
-               "1: lea 1b(%%rip), %16\n\t"
-               : "=m"(cx->rax), "=m"(cx->rbx), "=m"(cx->rcx), "=m"(cx->rdx),
-                 "=m"(cx->rsi), "=m"(cx->rdi), "=m"(cx->rbp), "=m"(cx->rsp),
-                 "=m"(cx->r8), "=m"(cx->r9), "=m"(cx->r10), "=m"(cx->r11),
-                 "=m"(cx->r12), "=m"(cx->r13), "=m"(cx->r14), "=m"(cx->r15),
-                 "=a"(cx->rip));
-}
-
-char *context_to_string(context *cx) {
-  size_t buffer_size = 1024;
-  char *buffer = (char *)calloc(buffer_size, sizeof(char));
-  assert(buffer != NULL);
-  printf("%zu\n", cx->rax);
-  snprintf(buffer, buffer_size,
-           "rax: 0x%016zu\n"
-           "rbx: 0x%016zu\n"
-           "rcx: 0x%016zu\n"
-           "rdx: 0x%016zu\n"
-           "rsi: 0x%016zu\n"
-           "rdi: 0x%016zu\n"
-           "rbp: 0x%016zu\n"
-           "rsp: 0x%016zu\n"
-           "r8:  0x%016zu\n"
-           "r9:  0x%016zu\n"
-           "r10: 0x%016zu\n"
-           "r11: 0x%016zu\n"
-           "r12: 0x%016zu\n"
-           "r13: 0x%016zu\n"
-           "r14: 0x%016zu\n"
-           "r15: 0x%016zu\n"
-           "rip: 0x%016zu\n",
-           cx->rax, cx->rbx, cx->rcx, cx->rdx, cx->rsi, cx->rdi, cx->rbp,
-           cx->rsp, cx->r8, cx->r9, cx->r10, cx->r11, cx->r12, cx->r13, cx->r14,
-           cx->r15, cx->rip);
-  printf("aaa %s", buffer);
-  return buffer;
+// 恢复保存的上下文
+void restore_context(context *ctx) {
+    if (setcontext(&ctx->context) == -1) {
+        perror("setcontext");
+        exit(EXIT_FAILURE);
+    }
 }
 
 #define STACK_SIZE 100
@@ -126,7 +57,7 @@ struct co {
 struct co *co_start(const char *name, void (*func)(void *), void *arg) {
   context *cx = new_context();
   printf("create co\n");
-  context_save(cx);
+  save_context(cx);
   printf("%s", context_to_string(cx));
 
   return NULL;
