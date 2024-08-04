@@ -101,7 +101,7 @@ void context_save(context *cx) {
                  "=m"(cx->r12), "=m"(cx->r13), "=m"(cx->r14), "=m"(cx->r15),
                  "=a"(cx->rip), "=r"(cx->eflags), "=m"(cx->cs), "=m"(cx->ss),
                  "=m"(cx->ds), "=m"(cx->es), "=m"(cx->fs), "=m"(cx->gs),
-                 "=m"(cx->fs_base), "=m"(cx->gs_base));
+                 "=r"(cx->fs_base), "=r"(cx->gs_base));
 }
 
 char *context_to_string(context *cx) {
