@@ -125,6 +125,34 @@ static void test_2() {
 #include <unistd.h>
 #include <errno.h>
 
+typedef struct user_regs_struct {
+  size_t rax;
+  size_t rbx;
+  size_t rcx;
+  size_t rdx;
+  size_t rsi;
+  size_t rdi;
+  size_t rbp;
+  size_t rsp;
+  size_t r8;
+  size_t r9;
+  size_t r10;
+  size_t r11;
+  size_t r12;
+  size_t r13;
+  size_t r14;
+  size_t r15;
+  size_t rip;
+  size_t eflags;
+  size_t cs;
+  size_t ss;
+  size_t ds;
+  size_t es;
+  size_t fs;
+  size_t gs;
+  size_t fs_base;
+  size_t gs_base;
+} context;
 void print_registers(struct user_regs_struct *regs) {
     printf("RAX: 0x%llx\n", regs->rax);
     printf("RBX: 0x%llx\n", regs->rbx);
