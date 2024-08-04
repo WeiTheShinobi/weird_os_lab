@@ -138,7 +138,7 @@ char *context_to_string(context *cx) {
            cx->rsp, cx->r8, cx->r9, cx->r10, cx->r11, cx->r12, cx->r13, cx->r14,
            cx->r15, cx->rip, cx->eflags, cx->cs, cx->ss, cx->ds, cx->es, cx->fs,
            cx->gs, cx->fs_base, cx->gs_base);
-  printf("%s", buffer);
+  printf("aaa %s", buffer);
   return buffer;
 }
 
