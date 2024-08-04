@@ -6,37 +6,38 @@
 
 #if defined(__x86_64__) || defined(_M_X64)
 typedef struct context {
-  size_t rax;
-  size_t rbx;
-  size_t rcx;
-  size_t rdx;
-  size_t rsi;
-  size_t rdi;
-  size_t rbp;
-  size_t rsp;
-  size_t r8;
-  size_t r9;
-  size_t r10;
-  size_t r11;
-  size_t r12;
-  size_t r13;
-  size_t r14;
-  size_t r15;
-  size_t rip;
-  size_t eflags;
-  size_t cs;
-  size_t ss;
-  size_t ds;
-  size_t es;
-  size_t fs;
-  size_t gs;
-  size_t fs_base;
-  size_t gs_base;
+  uint64_t rax;
+  uint64_t rbx;
+  uint64_t rcx;
+  uint64_t rdx;
+  uint64_t rsi;
+  uint64_t rdi;
+  uint64_t rbp;
+  uint64_t rsp;
+  uint64_t r8;
+  uint64_t r9;
+  uint64_t r10;
+  uint64_t r11;
+  uint64_t r12;
+  uint64_t r13;
+  uint64_t r14;
+  uint64_t r15;
+  uint64_t rip;
+  uint64_t eflags;
+  uint64_t cs;
+  uint64_t ss;
+  uint64_t ds;
+  uint64_t es;
+  uint64_t fs;
+  uint64_t gs;
+  uint64_t fs_base;
+  uint64_t gs_base;
 } context;
 
-context *new_context() {
+context* new_context() {
   context *cx = (context *)calloc(1, sizeof(context));
   assert(cx != NULL);
+  cx->rax = 0;
   cx->rbx = 0;
   cx->rcx = 0;
   cx->rdx = 0;
