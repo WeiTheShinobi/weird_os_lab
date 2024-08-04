@@ -34,7 +34,7 @@ typedef struct context {
 } context;
 
 context *new_context() {
-  context *cx = (context *)malloc(1, sizeof(context));
+  context *cx = (context *)malloc(sizeof(context));
   assert(cx != NULL);
   cx->rax = 0;
   cx->rbx = 0;
