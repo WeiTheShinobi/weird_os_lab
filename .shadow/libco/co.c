@@ -222,7 +222,7 @@ struct co {
 };
 
 struct co *co_start(const char *name, void (*func)(void *), void *arg) {
-  context*cx = new_context();
+  context *cx = new_context();
   context_save(cx);
   printf("%s", context_to_string(cx));
 
