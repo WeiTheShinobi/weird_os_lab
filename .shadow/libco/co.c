@@ -98,7 +98,7 @@ void context_save(context *cx) {
                  "=m"(cx->rsi), "=m"(cx->rdi), "=m"(cx->rbp), "=m"(cx->rsp),
                  "=m"(cx->r8), "=m"(cx->r9), "=m"(cx->r10), "=m"(cx->r11),
                  "=m"(cx->r12), "=m"(cx->r13), "=m"(cx->r14), "=m"(cx->r15),
-                 "=m"(cx->rip), "=r"(cx->eflags), "=m"(cx->cs), "=m"(cx->ss),
+                 "=a"(cx->rip), "=m"(cx->eflags), "=m"(cx->cs), "=m"(cx->ss),
                  "=m"(cx->ds), "=m"(cx->es), "=m"(cx->fs), "=m"(cx->gs),
                  "=r"(cx->fs_base), "=r"(cx->gs_base));
 }
