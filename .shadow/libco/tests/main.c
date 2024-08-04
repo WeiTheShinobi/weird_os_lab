@@ -116,10 +116,8 @@ static void test_2() {
 
     q_free(queue);
 }
-#include <setjmp.h>
-typedef struct {
 
-} jmp_buf;
+#include <setjmp.h>
 int main() {
     int n = 0;
     jmp_buf buf;
