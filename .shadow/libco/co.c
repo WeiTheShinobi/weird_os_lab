@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#if defined(__x86_64__) || defined(_M_X64)
+#
 typedef struct context {
   uint64_t rax;
   uint64_t rbx;
@@ -142,63 +142,6 @@ char *context_to_string(context *cx) {
 
   return buffer;
 }
-#elif defined(__i386) || defined(_M_IX86)
-typedef struct context {
-  size_t eax;
-  size_t ecx;
-  size_t edx;
-  size_t ebx;
-  size_t esp;
-  size_t ebp;
-  size_t esi;
-  size_t edi;
-  size_t eip;
-  size_t eflags;
-  size_t cs;
-  size_t ss;
-  size_t ds;
-  size_t es;
-  size_t fs;
-  size_t gs;
-} context;
-
-void context_save(context *cx) {
-  asm volatile("mov %%eax, %0\n\t"
-               "mov %%ecx, %1\n\t"
-               "mov %%edx, %2\n\t"
-               "mov %%ebx, %3\n\t"
-               "mov %%ebp, %4\n\t"
-               "mov %%esi, %5\n\t"
-               "mov %%edi, %6\n\t"
-               "pushf\n\t"
-               "pop %7\n\t"
-               : "=m"(cx->eax), "=m"(cx->ecx), "=m"(cx->edx), "=m"(cx->ebx),
-                 "=m"(cx->ebp), "=m"(cx->esi), "=m"(cx->edi), "=a"(cx->eip),
-                 "=r"(cx->eip));
-}
-
-char *context_to_string(context *cx) {
-  size_t buffer_size = 1024;
-  char *buffer = (char *)calloc(1024, sizeof(char));
-  assert(buffer != NULL);
-
-  snprintf(buffer, buffer_size,
-           "eax: 0x%016zu\n"
-           "ecx: 0x%016zu\n"
-           "edx: 0x%016zu\n"
-           "ebx: 0x%016zu\n"
-           "ebp: 0x%016zu\n"
-           "esi: 0x%016zu\n"
-           "edi: 0x%016zu\n"
-           "eip: 0x%016zu\n",
-           cx->eax, cx->ecx, cx->edx, cx->ebx, cx->ebp, cx->esi, cx->edi,
-           cx->eip);
-
-  return buffer;
-}
-#else
-printf("Unknown platform.\n");
-#endif
 
 // -----------------------------------
 
