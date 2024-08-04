@@ -95,20 +95,10 @@ char *context_to_string(context *cx) {
            "r13: 0x%016zu\n"
            "r14: 0x%016zu\n"
            "r15: 0x%016zu\n"
-           "rip: 0x%016zu\n"
-           "eflags: 0x%016zu\n"
-           "cs: 0x%016zu\n"
-           "ss: 0x%016zu\n"
-           "ds: 0x%016zu\n"
-           "es: 0x%016zu\n"
-           "fs: 0x%016zu\n"
-           "gs: 0x%016zu\n"
-           "fs_base: 0x%016zu\n"
-           "gs_base: 0x%016zu\n",
+           "rip: 0x%016zu\n",
            cx->rax, cx->rbx, cx->rcx, cx->rdx, cx->rsi, cx->rdi, cx->rbp,
            cx->rsp, cx->r8, cx->r9, cx->r10, cx->r11, cx->r12, cx->r13, cx->r14,
-           cx->r15, cx->rip, cx->eflags, cx->cs, cx->ss, cx->ds, cx->es, cx->fs,
-           cx->gs, cx->fs_base, cx->gs_base);
+           cx->r15, cx->rip);
   printf("aaa %s", buffer);
   return buffer;
 }
