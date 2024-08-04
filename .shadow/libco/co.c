@@ -4,15 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define STACK_SIZE 100
-
-enum co_status {
-  CO_NEW = 1, // 新创建，还未执行过
-  CO_RUNNING, // 已经执行过
-  CO_WAITING, // 在 co_wait 上等待
-  CO_DEAD,    // 已经结束，但还未释放资源
-};
-
+#if defined(__x86_64__) || defined(_M_X64)
 typedef struct context {
   size_t rax;
   size_t rbx;
@@ -43,29 +35,29 @@ typedef struct context {
 } context;
 
 void context_save(context *cx) {
-    // asm volatile("mov %%rax, %0\n\t"
-    //            "mov %%rbx, %1\n\t"
-    //            "mov %%rcx, %2\n\t"
-    //            "mov %%rdx, %3\n\t"
-    //            "mov %%rsi, %4\n\t"
-    //            "mov %%rdi, %5\n\t"
-    //            "mov %%rbp, %6\n\t"
-    //            "mov %%rsp, %7\n\t"
-    //            "mov %%r8, %8\n\t"
-    //            "mov %%r9, %9\n\t"
-    //            "mov %%r10, %10\n\t"
-    //            "mov %%r11, %11\n\t"
-    //            "mov %%r12, %12\n\t"
-    //            "mov %%r13, %13\n\t"
-    //            "mov %%r14, %14\n\t"
-    //            "mov %%r15, %15\n\t"
-    //            : "=r"(cx->rax), "=m"(cx->rbx), "=m"(cx->rcx), "=m"(cx->rdx),
-    //              "=m"(cx->rsi), "=m"(cx->rdi), "=m"(cx->rbp), "=m"(cx->rsp),
-    //              "=m"(cx->r8), "=m"(cx->r9), "=m"(cx->r10), "=m"(cx->r11),
-    //              "=m"(cx->r12), "=m"(cx->r13), "=m"(cx->r14), "=m"(cx->r15));
+  asm volatile("mov %%rax, %0\n\t"
+               "mov %%rbx, %1\n\t"
+               "mov %%rcx, %2\n\t"
+               "mov %%rdx, %3\n\t"
+               "mov %%rsi, %4\n\t"
+               "mov %%rdi, %5\n\t"
+               "mov %%rbp, %6\n\t"
+               "mov %%rsp, %7\n\t"
+               "mov %%r8, %8\n\t"
+               "mov %%r9, %9\n\t"
+               "mov %%r10, %10\n\t"
+               "mov %%r11, %11\n\t"
+               "mov %%r12, %12\n\t"
+               "mov %%r13, %13\n\t"
+               "mov %%r14, %14\n\t"
+               "mov %%r15, %15\n\t"
+               : "=r"(cx->rax), "=m"(cx->rbx), "=m"(cx->rcx), "=m"(cx->rdx),
+                 "=m"(cx->rsi), "=m"(cx->rdi), "=m"(cx->rbp), "=m"(cx->rsp),
+                 "=m"(cx->r8), "=m"(cx->r9), "=m"(cx->r10), "=m"(cx->r11),
+                 "=m"(cx->r12), "=m"(cx->r13), "=m"(cx->r14), "=m"(cx->r15));
 }
 
-char *context_to_string(context *co) {
+char *context_to_string(context *cx) {
   size_t buffer_size = 1024;
   char *buffer = (char *)calloc(1024, sizeof(char));
   assert(buffer != NULL);
@@ -97,13 +89,81 @@ char *context_to_string(context *co) {
            "gs: 0x%016zu\n"
            "fs_base: 0x%016zu\n"
            "gs_base: 0x%016zu\n",
-           co->rax, co->rbx, co->rcx, co->rdx, co->rsi, co->rdi, co->rbp,
-           co->rsp, co->r8, co->r9, co->r10, co->r11, co->r12, co->r13, co->r14,
-           co->r15, co->rip, co->eflags, co->cs, co->ss, co->ds, co->es, co->fs,
-           co->gs, co->fs_base, co->gs_base);
+           cx->rax, cx->rbx, cx->rcx, cx->rdx, cx->rsi, cx->rdi, cx->rbp,
+           cx->rsp, cx->r8, cx->r9, cx->r10, cx->r11, cx->r12, cx->r13, cx->r14,
+           cx->r15, cx->rip, cx->eflags, cx->cs, cx->ss, cx->ds, cx->es, cx->fs,
+           cx->gs, cx->fs_base, cx->gs_base);
 
   return buffer;
 }
+#elif defined(__i386) || defined(_M_IX86)
+typedef struct context {
+  size_t eax;
+  size_t ecx;
+  size_t edx;
+  size_t ebx;
+  size_t esp;
+  size_t ebp;
+  size_t esi;
+  size_t edi;
+  size_t eip;
+  size_t eflags;
+  size_t cs;
+  size_t ss;
+  size_t ds;
+  size_t es;
+  size_t fs;
+  size_t gs;
+} context;
+
+void context_save(context *cx) {
+  asm volatile("mov %%eax, %0\n\t"
+               "mov %%ecx, %1\n\t"
+               "mov %%edx, %2\n\t"
+               "mov %%ebx, %3\n\t"
+               "mov %%epb, %4\n\t"
+               "mov %%esi, %5\n\t"
+               "mov %%edi, %6\n\t"
+               "mov %%eip, %7\n\t"
+               : "=r"(cx->eax), "=m"(cx->ecx), "=m"(cx->edx), "=m"(cx->ebx),
+                 "=m"(cx->epb), "=m"(cx->esi), "=m"(cx->edi), "=m"(cx->eip),
+}
+
+char *context_to_string(context *cx) {
+  size_t buffer_size = 1024;
+  char *buffer = (char *)calloc(1024, sizeof(char));
+  assert(buffer != NULL);
+
+  snprintf(buffer, buffer_size,
+           "eax: 0x%016zu\n"
+           "ecx: 0x%016zu\n"
+           "edx: 0x%016zu\n"
+           "ebx: 0x%016zu\n"
+           "epb: 0x%016zu\n"
+           "esi: 0x%016zu\n"
+           "edi: 0x%016zu\n"
+           "eip: 0x%016zu\n"
+               cx->eax, cx->ecx, cx->edx, cx->ebx,
+                 cx->epb, cx->esi, cx->edi, cx->eip);
+
+  return buffer;
+}
+#else
+printf("Unknown platform.\n");
+#endif
+
+
+// -----------------------------------
+
+#define STACK_SIZE 100
+
+enum co_status {
+  CO_NEW = 1, // 新创建，还未执行过
+  CO_RUNNING, // 已经执行过
+  CO_WAITING, // 在 co_wait 上等待
+  CO_DEAD,    // 已经结束，但还未释放资源
+};
+
 
 struct co {
   char *name;

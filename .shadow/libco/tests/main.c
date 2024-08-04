@@ -118,15 +118,15 @@ static void test_2() {
 }
 
 int main() {
-        #if defined(__x86_64__) || defined(_M_X64)
-        printf("Running on x86_64 (64-bit) platform.\n");
-    #elif defined(__i386) || defined(_M_IX86)
-        printf("Running on x86 (32-bit) platform.\n");
-    #else
-        printf("Unknown platform.\n");
-    #endif
+    setbuf(stdout, NULL);
 
-    return 0;
+    printf("Test #1. Expect: (X|Y){0, 1, 2, ..., 199}\n");
+    test_1();
+
+    printf("\n\nTest #2. Expect: (libco-){200, 201, 202, ..., 399}\n");
+    test_2();
+
+    printf("\n\n");
 
     return 0;
 }
