@@ -66,7 +66,7 @@ context *new_context() {
 }
 
 void context_save(context *cx) {
-  asm volatile("cli"
+  asm volatile("cli\n\t"
     "mov %%rax, %0\n\t"
                "mov %%rbx, %1\n\t"
                "mov %%rcx, %2\n\t"
