@@ -52,6 +52,15 @@ void context_save(context *cx) {
                "mov %%r14, %14\n\t"
                "mov %%r15, %15\n\t"
                "1: lea 1b(%%rip), %16\n\t"
+                 "mov %%eflags, %17\n\t"
+                 "mov %%cs, %18\n\t"
+                 "mov %%ss, %19\n\t"
+                 "mov %%ds, %20\n\t"
+                 "mov %%es, %21\n\t"
+                 "mov %%fs, %22\n\t"
+                 "mov %%gs, %23\n\t"
+                 "mov %%fs_base, %24\n\t"
+                 "mov %%gs_base, %25\n\t"
                : "=r"(cx->rax), "=m"(cx->rbx), "=m"(cx->rcx), "=m"(cx->rdx),
                  "=m"(cx->rsi), "=m"(cx->rdi), "=m"(cx->rbp), "=m"(cx->rsp),
                  "=m"(cx->r8), "=m"(cx->r9), "=m"(cx->r10), "=m"(cx->r11),
