@@ -34,6 +34,37 @@ typedef struct context {
   size_t gs_base;
 } context;
 
+context *new_context() {
+  context *cx = calloc(1, sizeof(context));
+  assert(cx != NULL);
+  cx->rbx = 0;
+  cx->rcx = 0;
+  cx->rdx = 0;
+  cx->rsi = 0;
+  cx->rdi = 0;
+  cx->rbp = 0;
+  cx->rsp = 0;
+  cx->r8 = 0;
+  cx->r9 = 0;
+  cx->r10 = 0;
+  cx->r11 = 0;
+  cx->r12 = 0;
+  cx->r13 = 0;
+  cx->r14 = 0;
+  cx->r15 = 0;
+  cx->rip = 0;
+  cx->eflags = 0;
+  cx->cs = 0;
+  cx->ss = 0;
+  cx->ds = 0;
+  cx->es = 0;
+  cx->fs = 0;
+  cx->gs = 0;
+  cx->fs_base = 0;
+  cx->gs_base = 0;
+  return cx;
+}
+
 void context_save(context *cx) {
   asm volatile("mov %%rax, %0\n\t"
                "mov %%rbx, %1\n\t"
@@ -51,8 +82,7 @@ void context_save(context *cx) {
                "mov %%r13, %13\n\t"
                "mov %%r14, %14\n\t"
                "mov %%r15, %15\n\t"
-               "mov %%rip, %16\n\t" // Note: Not all compilers support saving
-                                    // rip directly
+               "1: lea 1b(%%rip), %16\n\t"
                "pushfq\n\t"
                "pop %17\n\t"
                "mov %%cs, %18\n\t"
@@ -61,15 +91,14 @@ void context_save(context *cx) {
                "mov %%es, %21\n\t"
                "mov %%fs, %22\n\t"
                "mov %%gs, %23\n\t"
-               "mov %%fs:0, %24\n\t" // Note: Accessing segment base registers
-                                     // directly may not be supported
+               "mov %%fs:0, %24\n\t"
                "mov %%gs:0, %25\n\t"
-               : "=r"(cx->rax), "=r"(cx->rbx), "=r"(cx->rcx), "=r"(cx->rdx),
-                 "=r"(cx->rsi), "=r"(cx->rdi), "=r"(cx->rbp), "=r"(cx->rsp),
-                 "=r"(cx->r8), "=r"(cx->r9), "=r"(cx->r10), "=r"(cx->r11),
-                 "=r"(cx->r12), "=r"(cx->r13), "=r"(cx->r14), "=r"(cx->r15),
-                 "=r"(cx->rip), "=r"(cx->eflags), "=r"(cx->cs), "=r"(cx->ss),
-                 "=r"(cx->ds), "=r"(cx->es), "=r"(cx->fs), "=r"(cx->gs),
+               : "=r"(cx->rax), "=m"(cx->rbx), "=m"(cx->rcx), "=m"(cx->rdx),
+                 "=m"(cx->rsi), "=m"(cx->rdi), "=m"(cx->rbp), "=m"(cx->rsp),
+                 "=m"(cx->r8), "=m"(cx->r9), "=m"(cx->r10), "=m"(cx->r11),
+                 "=m"(cx->r12), "=m"(cx->r13), "=m"(cx->r14), "=m"(cx->r15),
+                 "=a"(cx->rip), "=r"(cx->eflags), "=m"(cx->cs), "=m"(cx->ss),
+                 "=m"(cx->ds), "=m"(cx->es), "=m"(cx->fs), "=m"(cx->gs),
                  "=r"(cx->fs_base), "=r"(cx->gs_base));
 }
 
@@ -193,7 +222,7 @@ struct co {
 };
 
 struct co *co_start(const char *name, void (*func)(void *), void *arg) {
-  context *cx = (context *)calloc(1, sizeof(context));
+  context*cx = new_context();
   context_save(cx);
   printf("%s", context_to_string(cx));
 
