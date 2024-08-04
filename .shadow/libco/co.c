@@ -43,7 +43,7 @@ typedef struct context {
 } context;
 
 void context_save(context *cx) {
-  asm volatile("mov %rax, %0\n\t"
+  asm volatile("mov %%rax, %0\n\t"
                "mov %%rbx, %1\n\t"
                "mov %%rcx, %2\n\t"
                "mov %%rdx, %3\n\t"
@@ -59,7 +59,7 @@ void context_save(context *cx) {
                "mov %%r13, %13\n\t"
                "mov %%r14, %14\n\t"
                "mov %%r15, %15\n\t"
-               : "=m"(cx->rax), "=m"(cx->rbx), "=m"(cx->rcx), "=m"(cx->rdx),
+               : "=r"(cx->rax), "=m"(cx->rbx), "=m"(cx->rcx), "=m"(cx->rdx),
                  "=m"(cx->rsi), "=m"(cx->rdi), "=m"(cx->rbp), "=m"(cx->rsp),
                  "=m"(cx->r8), "=m"(cx->r9), "=m"(cx->r10), "=m"(cx->r11),
                  "=m"(cx->r12), "=m"(cx->r13), "=m"(cx->r14), "=m"(cx->r15));
