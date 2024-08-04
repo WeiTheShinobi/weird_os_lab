@@ -64,13 +64,13 @@ void context_save(context *cx) {
     "mov %%fs:0, %24\n\t"
     "mov %%gs:0, %25\n\t"
     "1:"
-    : "=r"(cx->rax), "=r"(cx->rbx), "=r"(cx->rcx), "=r"(cx->rdx),
-      "=r"(cx->rsi), "=r"(cx->rdi), "=r"(cx->rbp), "=r"(cx->rsp),
-      "=r"(cx->r8), "=r"(cx->r9), "=r"(cx->r10), "=r"(cx->r11),
-      "=r"(cx->r12), "=r"(cx->r13), "=r"(cx->r14), "=r"(cx->r15),
-      "=a"(cx->rip), "=r"(cx->eflags), "=r"(cx->cs), "=r"(cx->ss),
-      "=r"(cx->ds), "=r"(cx->es), "=r"(cx->fs), "=r"(cx->gs),
-      "=r"(cx->fs_base), "=r"(cx->gs_base)
+    : "=m"(cx->rax), "=m"(cx->rbx), "=m"(cx->rcx), "=m"(cx->rdx),
+      "=m"(cx->rsi), "=m"(cx->rdi), "=m"(cx->rbp), "=m"(cx->rsp),
+      "=m"(cx->r8), "=m"(cx->r9), "=m"(cx->r10), "=m"(cx->r11),
+      "=m"(cx->r12), "=m"(cx->r13), "=m"(cx->r14), "=m"(cx->r15),
+      "=a"(cx->rip), "=m"(cx->eflags), "=m"(cx->cs), "=m"(cx->ss),
+      "=m"(cx->ds), "=m"(cx->es), "=m"(cx->fs), "=m"(cx->gs),
+      "=m"(cx->fs_base), "=m"(cx->gs_base)
     :
     : "memory");
 }
