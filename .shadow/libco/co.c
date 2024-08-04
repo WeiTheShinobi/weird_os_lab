@@ -1,6 +1,7 @@
 #include "co.h"
 #include "assert.h"
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 #define STACK_SIZE 100
