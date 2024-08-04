@@ -35,7 +35,7 @@ static void test_1() {
     co_wait(thd1);
     co_wait(thd2);
 
-//    printf("\n");
+   printf("\n");
 }
 
 // -----------------------------------------------
@@ -117,16 +117,11 @@ static void test_2() {
     q_free(queue);
 }
 
+#include <setjmp.h>
 int main() {
-    setbuf(stdout, NULL);
-
-    printf("Test #1. Expect: (X|Y){0, 1, 2, ..., 199}\n");
-    test_1();
-
-    printf("\n\nTest #2. Expect: (libco-){200, 201, 202, ..., 399}\n");
-    test_2();
-
-    printf("\n\n");
-
-    return 0;
+    int n = 0;
+    jmp_buf buf;
+    setjmp(buf);
+    printf("Hello %d\n", n);
+    longjmp(buf, n++);
 }
