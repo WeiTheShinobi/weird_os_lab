@@ -35,43 +35,44 @@ typedef struct context {
 } context;
 
 void context_save(context *cx) {
-  asm volatile("mov %%rax, %0\n\t"
-               "mov %%rbx, %1\n\t"
-               "mov %%rcx, %2\n\t"
-               "mov %%rdx, %3\n\t"
-               "mov %%rsi, %4\n\t"
-               "mov %%rdi, %5\n\t"
-               "mov %%rbp, %6\n\t"
-               "mov %%rsp, %7\n\t"
-               "mov %%r8, %8\n\t"
-               "mov %%r9, %9\n\t"
-               "mov %%r10, %10\n\t"
-               "mov %%r11, %11\n\t"
-               "mov %%r12, %12\n\t"
-               "mov %%r13, %13\n\t"
-               "mov %%r14, %14\n\t"
-               "mov %%r15, %15\n\t"
-               "1: lea 1b(%%rip), %16\n\t"
-               "pushfq\n\t"
-               "pop %17\n\t"
-                 "mov %%cs, %18\n\t"
-                 "mov %%ss, %19\n\t"
-                 "mov %%ds, %20\n\t"
-                 "mov %%es, %21\n\t"
-                 "mov %%fs, %22\n\t"
-                 "mov %%gs, %23\n\t"
-                 "mov %%fs:0, %24\n\t"
-                 "mov %%gs:0, %25\n\t"
-               : "=r"(cx->rax), "=m"(cx->rbx), "=m"(cx->rcx), "=m"(cx->rdx),
-                 "=m"(cx->rsi), "=m"(cx->rdi), "=m"(cx->rbp), "=m"(cx->rsp),
-                 "=m"(cx->r8), "=m"(cx->r9), "=m"(cx->r10), "=m"(cx->r11),
-                 "=m"(cx->r12), "=m"(cx->r13), "=m"(cx->r14), "=m"(cx->r15),
-                 "=a"(cx->rip), "=r"(cx->eflags), "=m"(cx->cs), "=m"(cx->ss),
-                 "=m"(cx->ds), "=m"(cx->es), "=m"(cx->fs), "=m"(cx->gs),
-                 "=r"(cx->fs_base), "=r"(cx->gs_base));
-                 :
-                 :memory
+    asm volatile(
+        "mov %%rax, %0\n\t"
+        "mov %%rbx, %1\n\t"
+        "mov %%rcx, %2\n\t"
+        "mov %%rdx, %3\n\t"
+        "mov %%rsi, %4\n\t"
+        "mov %%rdi, %5\n\t"
+        "mov %%rbp, %6\n\t"
+        "mov %%rsp, %7\n\t"
+        "mov %%r8, %8\n\t"
+        "mov %%r9, %9\n\t"
+        "mov %%r10, %10\n\t"
+        "mov %%r11, %11\n\t"
+        "mov %%r12, %12\n\t"
+        "mov %%r13, %13\n\t"
+        "mov %%r14, %14\n\t"
+        "mov %%r15, %15\n\t"
+        "mov %%rip, %16\n\t"  // Note: Not all compilers support saving rip directly
+        "pushfq\n\t"
+        "pop %17\n\t"
+        "mov %%cs, %18\n\t"
+        "mov %%ss, %19\n\t"
+        "mov %%ds, %20\n\t"
+        "mov %%es, %21\n\t"
+        "mov %%fs, %22\n\t"
+        "mov %%gs, %23\n\t"
+        "mov %%fs:0, %24\n\t"  // Note: Accessing segment base registers directly may not be supported
+        "mov %%gs:0, %25\n\t"
+        : "=r"(cx->rax), "=r"(cx->rbx), "=r"(cx->rcx), "=r"(cx->rdx),
+          "=r"(cx->rsi), "=r"(cx->rdi), "=r"(cx->rbp), "=r"(cx->rsp),
+          "=r"(cx->r8), "=r"(cx->r9), "=r"(cx->r10), "=r"(cx->r11),
+          "=r"(cx->r12), "=r"(cx->r13), "=r"(cx->r14), "=r"(cx->r15),
+          "=r"(cx->rip), "=r"(cx->eflags), "=r"(cx->cs), "=r"(cx->ss),
+          "=r"(cx->ds), "=r"(cx->es), "=r"(cx->fs), "=r"(cx->gs),
+          "=r"(cx->fs_base), "=r"(cx->gs_base)
+    );
 }
+
 
 char *context_to_string(context *cx) {
   size_t buffer_size = 1024;
