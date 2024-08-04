@@ -60,8 +60,8 @@ void context_save(context *cx) {
                  "mov %%es, %21\n\t"
                  "mov %%fs, %22\n\t"
                  "mov %%gs, %23\n\t"
-                 "mov %%fs_base, %24\n\t"
-                 "mov %%gs_base, %25\n\t"
+                 "mov %%fs:0, %24\n\t"
+                 "mov %%gs:0, %25\n\t"
                : "=r"(cx->rax), "=m"(cx->rbx), "=m"(cx->rcx), "=m"(cx->rdx),
                  "=m"(cx->rsi), "=m"(cx->rdi), "=m"(cx->rbp), "=m"(cx->rsp),
                  "=m"(cx->r8), "=m"(cx->r9), "=m"(cx->r10), "=m"(cx->r11),
@@ -138,9 +138,11 @@ void context_save(context *cx) {
                "mov %%ebp, %4\n\t"
                "mov %%esi, %5\n\t"
                "mov %%edi, %6\n\t"
-               "1: lea 1b, %7\n\t"
+               "pushf\n\t"
+               "pop, %7\n\t"
                : "=m"(cx->eax), "=m"(cx->ecx), "=m"(cx->edx), "=m"(cx->ebx),
-                 "=m"(cx->ebp), "=m"(cx->esi), "=m"(cx->edi), "=a"(cx->eip));
+                 "=m"(cx->ebp), "=m"(cx->esi), "=m"(cx->edi), "=a"(cx->eip),
+                 "=r"(cx->eip));
 }
 
 char *context_to_string(context *cx) {
