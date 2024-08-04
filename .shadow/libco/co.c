@@ -68,7 +68,7 @@ void context_save(context *cx) {
       "=r"(cx->rsi), "=r"(cx->rdi), "=r"(cx->rbp), "=r"(cx->rsp),
       "=r"(cx->r8), "=r"(cx->r9), "=r"(cx->r10), "=r"(cx->r11),
       "=r"(cx->r12), "=r"(cx->r13), "=r"(cx->r14), "=r"(cx->r15),
-      "=r"(cx->rip), "=r"(cx->eflags), "=r"(cx->cs), "=r"(cx->ss),
+      "=a"(cx->rip), "=r"(cx->eflags), "=r"(cx->cs), "=r"(cx->ss),
       "=r"(cx->ds), "=r"(cx->es), "=r"(cx->fs), "=r"(cx->gs),
       "=r"(cx->fs_base), "=r"(cx->gs_base)
     :
