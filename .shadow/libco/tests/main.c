@@ -124,6 +124,35 @@ static void test_2() {
 #include <sys/user.h>  // For user_regs_struct
 #include <unistd.h>
 #include <errno.h>
+
+void print_registers(struct user_regs_struct *regs) {
+    printf("RAX: 0x%llx\n", regs->rax);
+    printf("RBX: 0x%llx\n", regs->rbx);
+    printf("RCX: 0x%llx\n", regs->rcx);
+    printf("RDX: 0x%llx\n", regs->rdx);
+    printf("RSI: 0x%llx\n", regs->rsi);
+    printf("RDI: 0x%llx\n", regs->rdi);
+    printf("RBP: 0x%llx\n", regs->rbp);
+    printf("RSP: 0x%llx\n", regs->rsp);
+    printf("R8:  0x%llx\n", regs->r8);
+    printf("R9:  0x%llx\n", regs->r9);
+    printf("R10: 0x%llx\n", regs->r10);
+    printf("R11: 0x%llx\n", regs->r11);
+    printf("R12: 0x%llx\n", regs->r12);
+    printf("R13: 0x%llx\n", regs->r13);
+    printf("R14: 0x%llx\n", regs->r14);
+    printf("R15: 0x%llx\n", regs->r15);
+    printf("RIP: 0x%llx\n", regs->rip);
+    printf("EFLAGS: 0x%llx\n", regs->eflags);
+    printf("CS: 0x%llx\n", regs->cs);
+    printf("SS: 0x%llx\n", regs->ss);
+    printf("DS: 0x%llx\n", regs->ds);
+    printf("ES: 0x%llx\n", regs->es);
+    printf("FS: 0x%llx\n", regs->fs);
+    printf("GS: 0x%llx\n", regs->gs);
+    printf("FS_BASE: 0x%llx\n", regs->fs_base);
+    printf("GS_BASE: 0x%llx\n", regs->gs_base);
+}
 int main() {
     // setbuf(stdout, NULL);
 
