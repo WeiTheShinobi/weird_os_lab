@@ -83,11 +83,25 @@ void context_save(context *cx) {
                "mov %%r13, %13\n\t"
                "mov %%r14, %14\n\t"
                "mov %%r15, %15\n\t"
+               "1: lea 1b(%%rip), %16\n\t"
+               "pushfq\n\t"
+               "pop %17\n\t"
+               "mov %%cs, %18\n\t"
+               "mov %%ss, %19\n\t"
+               "mov %%ds, %20\n\t"
+               "mov %%es, %21\n\t"
+               "mov %%fs, %22\n\t"
+               "mov %%gs, %23\n\t"
+               "mov %%fs:0, %24\n\t"
+               "mov %%gs:0, %25\n\t"
                "call  __am_irq_handle\n\t"
                : "=m"(cx->rax), "=m"(cx->rbx), "=m"(cx->rcx), "=m"(cx->rdx),
                  "=m"(cx->rsi), "=m"(cx->rdi), "=m"(cx->rbp), "=m"(cx->rsp),
                  "=m"(cx->r8), "=m"(cx->r9), "=m"(cx->r10), "=m"(cx->r11),
-                 "=m"(cx->r12), "=m"(cx->r13), "=m"(cx->r14), "=m"(cx->r15));
+                 "=m"(cx->r12), "=m"(cx->r13), "=m"(cx->r14), "=m"(cx->r15),
+                 "=a"(cx->rip), "=r"(cx->eflags), "=m"(cx->cs), "=m"(cx->ss),
+                 "=m"(cx->ds), "=m"(cx->es), "=m"(cx->fs), "=m"(cx->gs),
+                 "=r"(cx->fs_base), "=r"(cx->gs_base));
 }
 
 char *context_to_string(context *cx) {
@@ -126,7 +140,7 @@ char *context_to_string(context *cx) {
            cx->rsp, cx->r8, cx->r9, cx->r10, cx->r11, cx->r12, cx->r13, cx->r14,
            cx->r15, cx->rip, cx->eflags, cx->cs, cx->ss, cx->ds, cx->es, cx->fs,
            cx->gs, cx->fs_base, cx->gs_base);
-
+    printf("%s", buffer);
   return buffer;
 }
 
