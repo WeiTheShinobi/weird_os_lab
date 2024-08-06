@@ -86,7 +86,9 @@ struct co *co_start(const char *name, void (*func)(void *), void *arg) {
   return new_co;
 }
 
-void co_wait(struct co *co) {}
+void co_wait(struct co *co) {
+  free(co_node_remove());
+}
 
 void co_yield () {}
 
