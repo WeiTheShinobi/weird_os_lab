@@ -114,17 +114,20 @@ void co_wait(struct co *co) {
 }
 
 #define __LONG_JUMP_STATUS (1)
+
 void co_yield () {
   int status = setjmp(current->context);
   if (status == 0) {
     co_node = co_node->bk;
     while (!((current = co_node->coroutine)->status == CO_NEW ||
-           current->status == CO_RUNNING)) {
+             current->status == CO_RUNNING)) {
       co_node = co_node->bk;
     }
     assert(current);
 
-    if (current->status == CO_RUNNING) 
+    if (current->status == CO_RUNNING) {
+      longjmp(current->context, __LONG_JUMP_STATUS);
+    }
 
   } else {
   }
