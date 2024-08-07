@@ -129,6 +129,10 @@ void co_yield () {
   } else {
     stack_switch_call(current->stack + STACK_SIZE, current->func, current->arg);
     restore_return();
+
+    if (current->waiter) {
+      current->waiter->status = CO_RUNNING;
+    }
   }
 }
 
