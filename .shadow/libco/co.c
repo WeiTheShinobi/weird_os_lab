@@ -138,9 +138,9 @@ void co_yield () {
       }
       co_yield ();
     }
-  } else {
-    printf("\nCoroutine %s exited\n", current->name);
   }
+
+  assert(status && current->status == CO_RUNNING);
 }
 
 static __attribute__((constructor)) void co_constructor(void) {
