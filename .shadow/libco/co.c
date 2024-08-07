@@ -128,6 +128,7 @@ void co_yield () {
 
   } else {
     stack_switch_call(current->stack + sizeof(current->stack), current->func, current->arg);
+    restore_return();
   }
 }
 
