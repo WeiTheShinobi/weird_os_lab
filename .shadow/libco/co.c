@@ -118,7 +118,7 @@ void co_yield () {
       co_node = co_node->bk;
     }
     assert(current);
-    printf("co_yield: %s\n", current->name);
+
     if (current->status == CO_RUNNING) {
       longjmp(current->context, __LONG_JUMP_STATUS);
     } else {
