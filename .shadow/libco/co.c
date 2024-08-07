@@ -135,6 +135,7 @@ void co_yield () {
         current->waiter->status = CO_RUNNING;
       }
       current->status = CO_DEAD;
+      co_yield();
     }
   } else {
     printf("Coroutine %s exited\n", current->name);
