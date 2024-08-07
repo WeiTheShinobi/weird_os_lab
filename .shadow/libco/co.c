@@ -139,7 +139,7 @@ void co_yield () {
       co_yield ();
     }
   } else {
-    printf("Coroutine %s exited\n", current->name);
+    printf("\nCoroutine %s exited\n", current->name);
   }
 }
 
