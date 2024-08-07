@@ -7,22 +7,7 @@
 #include <string.h>
 #include <ucontext.h>
 
-static __attribute__((constructor)) void co_constructor(void) {
-  current = co_start("main", NULL, NULL);
-  current->status = CO_RUNNING;
-}
 
-static __attribute__((destructor)) void co_destructor(void) {
-  if (co_node == NULL) {
-    return;
-  }
-
-  while (co_node) {
-    current = co_node->coroutine;
-    free(current);
-    free(co_node_remove());
-  }
-}
 
 typedef struct CONODE {
   struct co *coroutine;
@@ -144,4 +129,21 @@ static inline void stack_switch_call(void *sp, void *entry, void *arg) {
  */
 static inline void restore_return() {
   asm volatile("movq 0(%%rsp), %%rcx" : :);
+}
+
+static __attribute__((constructor)) void co_constructor(void) {
+  current = co_start("main", NULL, NULL);
+  current->status = CO_RUNNING;
+}
+
+static __attribute__((destructor)) void co_destructor(void) {
+  if (co_node == NULL) {
+    return;
+  }
+
+  while (co_node) {
+    current = co_node->coroutine;
+    free(current);
+    free(co_node_remove());
+  }
 }
