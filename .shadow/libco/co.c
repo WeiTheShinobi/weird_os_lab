@@ -103,13 +103,18 @@ void co_wait(struct co *co) {
     co_yield ();
   }
 
+  while (co_node->coroutine != co) {
+    co_node = co_node->bk;
+  }
+  assert(co_node->coroutine == co);
+
   free(co);
   free(co_node_remove());
 }
 
 #define __LONG_JUMP_STATUS (1)
 
-void co_yield() {
+void co_yield () {
   int status = setjmp(current->context);
   if (status == 0) {
     co_node = co_node->bk;
@@ -131,6 +136,9 @@ void co_yield() {
       }
       current->status = CO_DEAD;
     }
+  } else {
+    stack_switch_call(current->stack + STACK_SIZE, current->func, current->arg);
+    restore_return();
   }
 }
 
