@@ -7,8 +7,6 @@
 #include <string.h>
 #include <ucontext.h>
 
-
-
 typedef struct CONODE {
   struct co *coroutine;
 
@@ -72,7 +70,6 @@ struct co {
   uint8_t stack[STACK_SIZE]; // 协程的堆栈
 };
 
-
 static inline void stack_switch_call(void *sp, void *entry, void *arg) {
   asm volatile("movq %%rcx, 0(%0); movq %0, %%rsp; movq %2, %%rdi; call *%1"
                :
@@ -124,18 +121,17 @@ void co_yield () {
     printf("co_yield: %s\n", current->name);
     if (current->status == CO_RUNNING) {
       longjmp(current->context, __LONG_JUMP_STATUS);
-    }
+    } else {
+      stack_switch_call(current->stack + STACK_SIZE, current->func,
+                        current->arg);
+      restore_return();
 
-  } else {
-    stack_switch_call(current->stack + STACK_SIZE, current->func, current->arg);
-    restore_return();
-
-    if (current->waiter) {
-      current->waiter->status = CO_RUNNING;
+      if (current->waiter) {
+        current->waiter->status = CO_RUNNING;
+      }
     }
   }
 }
-
 
 static __attribute__((constructor)) void co_constructor(void) {
   current = co_start("main", NULL, NULL);
