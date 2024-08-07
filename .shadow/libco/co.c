@@ -137,8 +137,7 @@ void co_yield () {
       current->status = CO_DEAD;
     }
   } else {
-    stack_switch_call(current->stack + STACK_SIZE, current->func, current->arg);
-    restore_return();
+    printf("Coroutine %s exited\n", current->name);
   }
 }
 
