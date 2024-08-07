@@ -72,6 +72,18 @@ struct co {
   uint8_t stack[STACK_SIZE]; // 协程的堆栈
 };
 
+
+static inline void stack_switch_call(void *sp, void *entry, void *arg) {
+  asm volatile("movq %%rcx, 0(%0); movq %0, %%rsp; movq %2, %%rdi; call *%1"
+               :
+               : "b"((uintptr_t)sp - 16), "d"((uintptr_t)entry),
+                 "a"((uintptr_t)arg));
+}
+
+static inline void restore_return() {
+  asm volatile("movq 0(%%rsp), %%rcx" : :);
+}
+
 struct co *co_start(const char *name, void (*func)(void *), void *arg) {
   struct co *new_co = malloc(sizeof(struct co));
   assert(new_co != NULL);
@@ -115,21 +127,10 @@ void co_yield () {
     }
 
   } else {
+    stack_switch_call(current->stack + sizeof(current->stack), current->func, current->arg);
   }
 }
 
-static inline void stack_switch_call(void *sp, void *entry, void *arg) {
-  asm volatile("movq %%rcx, 0(%0); movq %0, %%rsp; movq %2, %%rdi; call *%1"
-               :
-               : "b"((uintptr_t)sp - 16), "d"((uintptr_t)entry),
-                 "a"((uintptr_t)arg));
-}
-/*
- * 从调用的指定函数返回，并恢复相关的寄存器。此时协程执行结束，以后再也不会执行该协程的上下文。这里需要注意的是，其和上面并不是对称的，因为调用协程给了新创建的选中协程的堆栈，则选中协程以后就在自己的堆栈上执行，永远不会返回到调用协程的堆栈。
- */
-static inline void restore_return() {
-  asm volatile("movq 0(%%rsp), %%rcx" : :);
-}
 
 static __attribute__((constructor)) void co_constructor(void) {
   current = co_start("main", NULL, NULL);
