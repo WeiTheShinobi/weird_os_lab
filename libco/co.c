@@ -1,40 +1,56 @@
 #include "co.h"
 #include "assert.h"
+#include <setjmp.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ucontext.h>
-#include <setjmp.h>
 
-typedef struct {
-  ucontext_t context;
-} context;
+typedef struct CONODE {
+  struct co *coroutine;
 
-context *new_context() {
-  context *ctx = malloc(sizeof(context));
-  if (!ctx) {
-    perror("malloc");
-    exit(EXIT_FAILURE);
-  }
-  return ctx;
-}
+  struct CONODE *fd, *bk;
+} CoNode;
 
-void save_context(context *ctx) {
-  if (getcontext(&ctx->context) == -1) {
-    perror("getcontext");
-    exit(EXIT_FAILURE);
-  }
-}
+static CoNode *co_node = NULL;
+struct co *current;
 
-void restore_context(context *ctx) {
-  if (setcontext(&ctx->context) == -1) {
-    perror("setcontext");
-    exit(EXIT_FAILURE);
+static void co_node_insert(struct co *coroutine) {
+  CoNode *victim = (CoNode *)malloc(sizeof(CoNode));
+  assert(victim);
+
+  victim->coroutine = coroutine;
+  if (co_node == NULL) {
+    victim->fd = victim->bk = victim;
+    co_node = victim;
+  } else {
+    victim->fd = co_node->fd;
+    victim->bk = co_node;
+    victim->fd->bk = victim->bk->fd = victim;
   }
 }
 
-#define STACK_SIZE 100
+static CoNode *co_node_remove() {
+  CoNode *victim = NULL;
+
+  if (co_node == NULL) {
+    return NULL;
+  } else if (co_node->bk == co_node) {
+    victim = co_node;
+    co_node = NULL;
+  } else {
+    victim = co_node;
+
+    co_node = co_node->bk;
+    co_node->fd = victim->fd;
+    co_node->fd->bk = co_node;
+  }
+
+  return victim;
+}
+
+#define STACK_SIZE 1024 * 12
 
 enum co_status {
   CO_NEW = 1, // 新创建，还未执行过
@@ -44,25 +60,102 @@ enum co_status {
 };
 
 struct co {
-  char *name;
+  const char *name;
   void (*func)(void *); // co_start 指定的入口地址和参数
   void *arg;
 
   enum co_status status;     // 协程的状态
   struct co *waiter;         // 是否有其他协程在等待当前协程
-  struct context *context;   // 寄存器现场
+  jmp_buf context;           // 寄存器现场
   uint8_t stack[STACK_SIZE]; // 协程的堆栈
 };
 
-struct co *co_start(const char *name, void (*func)(void *), void *arg) {
-  struct co *new_co = malloc(sizeof(struct co));
-  assert(new_co);
-    new_co->name = strdup(name);
-    new_co->func = func;
-    new_co->arg = arg;
-  return NULL;
+static inline void stack_switch_call(void *sp, void *entry, void *arg) {
+  asm volatile("movq %%rcx, 0(%0); movq %0, %%rsp; movq %2, %%rdi; call *%1"
+               :
+               : "b"((uintptr_t)sp - 16), "d"((uintptr_t)entry),
+                 "a"((uintptr_t)arg));
 }
 
-void co_wait(struct co *co) {}
+static inline void restore_return() {
+  asm volatile("movq 0(%%rsp), %%rcx" : :);
+}
 
-void co_yield () {}
+struct co *co_start(const char *name, void (*func)(void *), void *arg) {
+  struct co *new_co = malloc(sizeof(struct co));
+  assert(new_co != NULL);
+
+  new_co->name = name;
+  new_co->func = func;
+  new_co->arg = arg;
+  new_co->status = CO_NEW;
+  new_co->waiter = NULL;
+
+  co_node_insert(new_co);
+
+  return new_co;
+}
+
+void co_wait(struct co *co) {
+  if (co->status != CO_DEAD) {
+    current->status = CO_WAITING;
+    co->waiter = current;
+    co_yield ();
+  }
+
+  while (co_node->coroutine != co) {
+    co_node = co_node->bk;
+  }
+  assert(co_node->coroutine == co);
+
+  free(co);
+  free(co_node_remove());
+}
+
+#define __LONG_JUMP_STATUS (1)
+
+void co_yield () {
+  int status = setjmp(current->context);
+  if (status == 0) {
+    co_node = co_node->bk;
+    while (!((current = co_node->coroutine)->status == CO_NEW ||
+             current->status == CO_RUNNING)) {
+      co_node = co_node->bk;
+    }
+    assert(current);
+
+    if (current->status == CO_RUNNING) {
+      longjmp(current->context, __LONG_JUMP_STATUS);
+    } else {
+      ((struct co volatile *)current)->status = CO_RUNNING;
+      stack_switch_call(current->stack + STACK_SIZE, current->func,
+                        current->arg);
+      restore_return();
+
+      current->status = CO_DEAD;
+      if (current->waiter) {
+        current->waiter->status = CO_RUNNING;
+      }
+      co_yield ();
+    }
+  }
+
+  assert(status && current->status == CO_RUNNING);
+}
+
+static __attribute__((constructor)) void co_constructor(void) {
+  current = co_start("main", NULL, NULL);
+  current->status = CO_RUNNING;
+}
+
+static __attribute__((destructor)) void co_destructor(void) {
+  if (co_node == NULL) {
+    return;
+  }
+
+  while (co_node) {
+    current = co_node->coroutine;
+    free(current);
+    free(co_node_remove());
+  }
+}
