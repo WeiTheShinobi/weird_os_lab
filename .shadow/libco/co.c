@@ -127,15 +127,16 @@ void co_yield () {
     if (current->status == CO_RUNNING) {
       longjmp(current->context, __LONG_JUMP_STATUS);
     } else {
+      ((struct co volatile *)current)->status = CO_RUNNING;
       stack_switch_call(current->stack + STACK_SIZE, current->func,
                         current->arg);
       restore_return();
 
+      current->status = CO_DEAD;
       if (current->waiter) {
         current->waiter->status = CO_RUNNING;
       }
-      current->status = CO_DEAD;
-      co_yield();
+      co_yield ();
     }
   } else {
     printf("Coroutine %s exited\n", current->name);
